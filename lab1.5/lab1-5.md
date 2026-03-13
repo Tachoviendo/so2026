@@ -57,7 +57,43 @@ Para eso usamos la siguiente sintaxis:
 ## Levantar sv web en Windows 
 Como no puedo instalar nada porque le di el mínimo espacio posible, voy a usar una alternativa nativa de windows. 
 
-Se puede emplear el powershell como un sv http básico mediante un script `ps1`
+Se puede emplear el powershell como un sv http básico mediante un script `ps1` con el siguiente código: 
+
+`
+ Write-Host "Servidor corriendo en http://localhost:8000/"
+
+  while ($listener.IsListening) {
+      $context = $listener.GetContext()
+      $response = $context.Response
+
+      $content = Get-Content "index.html" -Raw
+      $buffer = [System.Text.Encoding]::UTF8.GetBytes($content)
+
+      $response.ContentLength64 = $buffer.Length
+      $response.OutputStream.Write($buffer, 0, $buffer.Length)
+      $response.OutputStream.Close()
+  }
+
+`
+
+Luego para ejecutarlo usamos: 
+
+`powershell -ExecutionPolicy Bypass -File server.ps1 `
+
+![captura de pantalla](assets/sc07.png)
+
+Y en el navegador: 
+
+![captura de pantalla](assets/sc08.png)
+
+Como configuramos el sv solo para que mire el contenido de index.html no muestra la imagen. hay que hacer otras cositas en el `.ps1` pero son más complejas y no valen la pena detallar. 
+
+
+
+
+
+
+
 
 
 
