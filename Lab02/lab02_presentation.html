@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atacantes Locales - Presentación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 2px solid #222;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            margin-bottom: 2px;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #60a5fa;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #93c5fd;
+            font-weight: 300;
+        }
+
+        .slide h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #60a5fa;
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 15px;
+        }
+
+        .slide-content {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #d1d5db;
+        }
+
+        .slide-content p {
+            margin-bottom: 20px;
+        }
+
+        .slide-content strong {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .slide-content a {
+            color: #60a5fa;
+            text-decoration: none;
+            border-bottom: 1px solid #60a5fa;
+            transition: all 0.3s ease;
+        }
+
+        .slide-content a:hover {
+            color: #93c5fd;
+            border-bottom-color: #93c5fd;
+        }
+
+        .slide-content ol {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .slide-content li {
+            margin-bottom: 15px;
+            padding-left: 10px;
+        }
+
+        .slide-image {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+
+        .level-2 {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+        }
+
+        .level-3 {
+            background: linear-gradient(135deg, #1e1a1a 0%, #0f0d0d 100%);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .nav-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(30, 64, 175, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            z-index: 1000;
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+                min-height: auto;
+            }
+            .navigation, .slide-counter {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide h2 {
+                font-size: 2em;
+            }
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+            .slide-content {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        
+    <div class="slide title-slide">
+        <h1>Atacantes Locales</h1>
+        <p class="subtitle">Investigación de Seguridad - Lab02</p>
+    </div>
+    
+    <div class="slide level-1">
+        <h2>Atacantes Locales</h2>
+        <div class="slide-content">
+            <p>Para este laboratorio, decidí indagar en la escena local de `hackers` y dos de los más mediaticos son:</p>
+<ol><li>gov.eth </li><li>LaPampaleaks </li></ol>
+<p>La principal diferencia entre ambos es que el primero es una única persona y el segundo es uan organización que ataca con un poco más de criterio.</p>
+        </div>
+    </div>
+    
+    <div class="slide level-2">
+        <h2>gov.eth </h2>
+        <div class="slide-content">
+            <p>Conocido por exponerse al ojo público, ha declarado en entrevistas que lo hace "just for fun". De extrema izquierda, escucha duki y a los tussiwarriors</p>
+<p>Aquí les dejo un video de el mismo grabando su pantalla con obs:  https://x.com/EPreve/status/1902326002874818801?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1902326002874818801%7Ctwgr%5E21b6af231ef92c9c48881ee0a91cd6b380261563%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Fwww.montevideo.com.uy%2FCiencia-y-Tecnologia%2FDatos-expuestos-ciberataques-y-etica--quienes-estan-detras-de-los-hackeos-en-Uruguay--uc920531</p>
+<p>El resultado de todo esto no ha sido mas que ataques al frontend de estas aplicaciones y no se ha demostrado que haya podido vulnerar las bases de datos.</p>
+<p>fuente: https://www.montevideo.com.uy/Ciencia-y-Tecnologia/Datos-expuestos-ciberataques-y-etica--quienes-estan-detras-de-los-hackeos-en-Uruguay--uc920531</p>
+        </div>
+    </div>
+    
+    <div class="slide level-2">
+        <h2>LaPampaLeaks </h2>
+        <div class="slide-content">
+            <p>Si comparamos ambos atacantes, se podría decir que el muchacho anterior esta aburrido en la casa. Mientras que pampaLeaks busca hacer daño. Ha hecho diversos ataques a varias instituciones uruguayas. El ministerio del Interior y Dinacia son solo algunas victicas.</p>
+<p>Generalmente realizar filtraciones de bases de datos. Se cree que el porpio `gov.eth` fue parte en algún momento</p>
+<p>En el ataque a el Ministerio se filtraron cerca de 150 millones de datos.</p>
+        </div>
+    </div>
+    
+    <div class="slide level-3">
+        <h2>Otros achievements </h2>
+        <div class="slide-content">
+            <ol><li>Doxearon a Yamandú Orsi y al director de la Agesic. Pusieron su C.I y su número de teléfono en la web de Dinancia. </li><li>Demostraron que no era solo un defacing (alterar el frontend) y que realmente tenian acceso a los sistemas. Cuando el gobierno quiso desmentirlos publicaron una captura de mails internos que no pude encontrar :( </li><li>Nic.com.uy y registraron dominios gubernamentales que suplantaban los origianles. </li></ol>
+!<a href="assets/sc01.png" target="_blank">captura de pantalla</a>
+        </div>
+    </div>
+    
+    </div>
+
+    <div class="slide-counter" id="slideCounter">Slide 1</div>
+
+    <div class="navigation">
+        <button class="nav-button" onclick="scrollToSlide('prev')">◀ Anterior</button>
+        <button class="nav-button" onclick="scrollToSlide('next')">Siguiente ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function updateCounter() {
+            document.getElementById('slideCounter').textContent = `Slide ${currentSlide + 1} / ${slides.length}`;
+        }
+
+        function scrollToSlide(direction) {
+            if (direction === 'next' && currentSlide < slides.length - 1) {
+                currentSlide++;
+            } else if (direction === 'prev' && currentSlide > 0) {
+                currentSlide--;
+            }
+
+            slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+            updateCounter();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                scrollToSlide('next');
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                scrollToSlide('prev');
+            }
+        });
+
+        // Update counter on scroll
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const scrollPosition = window.scrollY + window.innerHeight / 2;
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    const slideTop = window.scrollY + rect.top;
+                    const slideBottom = slideTop + rect.height;
+
+                    if (scrollPosition >= slideTop && scrollPosition < slideBottom) {
+                        currentSlide = index;
+                        updateCounter();
+                    }
+                });
+            }, 100);
+        });
+
+        updateCounter();
+    </script>
+</body>
+</html>

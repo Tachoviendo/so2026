@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atacantes Locales - Infographic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            color: #60a5fa;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            color: #93c5fd;
+            font-weight: 300;
+        }
+
+        .attackers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .attacker-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .attacker-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        }
+
+        .bg-gradient-from-blue-600 {
+            background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+        }
+
+        .bg-gradient-from-red-600 {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        }
+
+        .bg-gradient-from-purple-600 {
+            background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
+        }
+
+        .bg-gradient-from-green-600 {
+            background: linear-gradient(135deg, #059669 0%, #065f46 100%);
+        }
+
+        .card-header {
+            padding: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attacker-name {
+            font-size: 2.2em;
+            color: white;
+            font-weight: 700;
+        }
+
+        .threat-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .bg-blue-500 { background: #3b82f6; }
+        .bg-red-500 { background: #ef4444; }
+        .bg-purple-500 { background: #a855f7; }
+        .bg-green-500 { background: #10b981; }
+
+        .card-body {
+            padding: 30px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .attacker-description {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            color: #e5e7eb;
+            line-height: 1.8;
+        }
+
+        .profile-section {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .profile-item {
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .profile-key {
+            color: #fbbf24;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .profile-value {
+            color: #d1d5db;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 5px;
+        }
+
+        .stat-unit {
+            font-size: 1.1em;
+            color: #93c5fd;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-context {
+            font-size: 0.85em;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .achievements-section {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .achievements-section h3 {
+            font-size: 1.5em;
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
+        .achievements-list {
+            list-style: none;
+        }
+
+        .achievement-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1em;
+            color: #d1d5db;
+        }
+
+        .achievement-item:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-bullet {
+            color: #fbbf24;
+            margin-right: 10px;
+            font-weight: 700;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .attacker-card {
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .attackers-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .attacker-name {
+                font-size: 1.5em;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Atacantes Locales</h1>
+            <p class="subtitle">Visual Security Analysis & Threat Intelligence</p>
+        </div>
+
+        <div class="attackers-grid">
+            
+        <div class="attacker-card bg-gradient-from-blue-600 to-blue-800">
+            <div class="card-header">
+                <h2 class="attacker-name">gov.eth</h2>
+                <div class="threat-badge bg-blue-500">THREAT ACTOR</div>
+            </div>
+
+            <div class="card-body">
+                <p class="attacker-description">Conocido por exponerse al ojo público, ha declarado en entrevistas que lo hace "just for fun". De extrema izquierda, escucha duki y a los tussiwarriors</p>
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        
+        <div class="attacker-card bg-gradient-from-red-600 to-red-800">
+            <div class="card-header">
+                <h2 class="attacker-name">LaPampaLeaks</h2>
+                <div class="threat-badge bg-red-500">THREAT ACTOR</div>
+            </div>
+
+            <div class="card-body">
+                <p class="attacker-description">Si comparamos ambos atacantes, se podría decir que el muchacho anterior esta aburrido en la casa. Mientras que pampaLeaks busca hacer daño. Ha hecho diversos ataques a varias instituciones uruguayas. El ministerio del Interior y Dinacia son solo algunas victicas.</p>
+
+                
+
+                <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">150</div>
+                <div class="stat-unit">millones</div>
+                <div class="stat-context">n el ataque a el Ministerio se filtraron cerca de 150 millones de datos....</div>
+            </div>
+            </div>
+
+                <div class="achievements-section"><h3>Notable Actions</h3><ul class="achievements-list">
+            <li class="achievement-item">
+                <span class="achievement-bullet">▸</span>
+                Doxearon a Yamandú Orsi y al director de la Agesic. Pusieron su C.I y su número de teléfono en la web de Dinancia. 
+            </li>
+            
+            <li class="achievement-item">
+                <span class="achievement-bullet">▸</span>
+                Demostraron que no era solo un defacing (alterar el frontend) y que realmente tenian acceso a los sistemas. Cuando el gobierno quiso desmentirlos publicaron una captura de mails internos que no pude encontrar :( 
+            </li>
+            
+            <li class="achievement-item">
+                <span class="achievement-bullet">▸</span>
+                Nic.com.uy y registraron dominios gubernamentales que suplantaban los origianles. 
+            </li>
+            
+            <li class="achievement-item">
+                <span class="achievement-bullet">▸</span>
+                Otros achievements 
+            </li>
+            </ul></div>
+            </div>
+        </div>
+        
+        </div>
+
+        <div class="footer">
+            <p>Generated from Lab02 Documentation | Security Research Analysis</p>
+        </div>
+    </div>
+</body>
+</html>
