@@ -132,15 +132,15 @@ En este último comando, el primer nombre corresponde al grupo y el segundo al u
 
 Aunque un poco más escondida, la opción existe, aunque solo con la interfaz vieja. en `Administración de Equipos` en la sección de `herramientas del sistema` vemos la opción de `Usuarios y grupos locales`. Al clickar vemos lo siguiente: 
 
-![captura de pantalla](assets/sc015.png)
+![captura de pantalla](assets/sc15.png)
 
 si ingresamos a `grupos` tenemos la opción de crear un grupo nuevo: 
 
-![captura de pantalla](assets/sc016.png)
+![captura de pantalla](assets/sc16.png)
 
 Acto seguido, tendremos que rellenar un formulario y agregar los usuarios que queremos que sean parte:
 
-![captura de pantalla](assets/sc017.png)
+![captura de pantalla](assets/sc17.png)
 
 Algo a desacatar es que los grupos y usuarios parecen no ser case-Sensitive en windows y al intentar crear el grupo `Desarrollo` me dió un error dicienco que este ya existía, por lo que lo nombre `Desarrollo1` .
 
