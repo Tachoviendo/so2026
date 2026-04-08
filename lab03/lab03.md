@@ -7,7 +7,7 @@ Asignatura: Sistemas Operativos
 
 Docente: Jorge Martínez
 
-Fecha: 4 de abril de 2026
+Fecha: 8 de abril de 2026
 
 # Creación del usuario 
 ## Ubuntu 
