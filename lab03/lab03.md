@@ -47,7 +47,7 @@ pulsando en el botón `No tengo los datos de inicio de sesión de esta persona` 
 
 y recién aquí nos da la opción de `Agregar un usuario sin cuenta Microsoft`. Al clickar, vemos lo siguiente: 
 
-![captura de pantalla](assets/sc10.png). 
+![captura de pantalla](assets/sc10.png)
 
 Aquí es donde voy a crear el usuario `desarrollo`
 
@@ -56,11 +56,11 @@ Aquí es donde voy a crear el usuario `desarrollo`
 Desde el `panel de control` podemos ir a `Cuentas de usuario` y denuevo a `Cuentas de usuario`
 y clickar en `Administrar otra cuenta` entre otras opciones 
 
-![captura de pantalla](assets/sc11.png). 
+![captura de pantalla](assets/sc11.png)
 
 al presionar nos muestra esto: 
 
-![captura de pantalla](assets/sc12.png).
+![captura de pantalla](assets/sc12.png)
 
 y sorprendentemente al clickar `Agregar un nuevo usuario en configuración` nos lleva a la interfaz nueva. 
 
@@ -70,11 +70,11 @@ Lo que si no podemos hacer en la GUI nueva es cambiar el tipo de cuenta.
 
 Para lograr agregar la cuenta mantenimiento, primero creo una cuenta local como se detalla anteriormente y luego me dirigo a `Panel de control\Cuentas de usuario\Cuentas de usuario\Administrar cuentas\Cambiar una cuenta` y clicko en mantenimiento. Aquí tendré el siguiente menú: 
 
-![captura de pantalla](assets/sc13.png).
+![captura de pantalla](assets/sc13.png)
 
 y solo seleccionamos en Administrador. 
 
-![captura de pantalla](assets/sc14.png).
+![captura de pantalla](assets/sc14.png)
 
 ### Alternativa Cli
 
