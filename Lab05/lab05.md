@@ -130,4 +130,26 @@ do {
     }
 
 } while ($opcion -ne "4")
+
 ```
+
+
+# Resultados y capturas de pantalla 
+## Menú 
+
+![captura de pantalla](assets/sc01.png)
+
+## Ordenar lista 
+
+![captura de pantalla](assets/sc02.png)
+
+## Repetir palabra 
+
+![captura de pantalla](assets/sc03.png)
+
+## Listar usuarios 
+
+![captura de pantalla](assets/sc04.png)
+
+
+
