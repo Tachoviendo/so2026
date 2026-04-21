@@ -264,37 +264,8 @@ PowerShell soporta expresiones regulares de forma nativa mediante el operador `-
 
 El script lee el archivo [scripts/usuarios.csv](scripts/usuarios.csv) que contiene una columna `Email`:
 
-```
-Nombre,Email
-Juan Pérez,juan.perez@empresa.com
-Ana López,ana.lopez@
-Carlos Ruiz,carlos@dominio.com.ar
-Pedro,sindominio
-```
+![captura de pantalla](assets/sc01.png) 
 
-```powershell
-$patron = '^[^@\s]+@[^@\s]+\.[^@\s]+$'
-
-Import-Csv -Path "$PSScriptRoot\usuarios.csv" | ForEach-Object {
-    if ($_.Email -match $patron) {
-        Write-Host "OK:    $($_.Email)"
-    } else {
-        Write-Host "ERROR: $($_.Email) - formato invalido"
-    }
-}
-```
-
-**Output esperado:**
-```
-OK:    juan.perez@empresa.com
-ERROR: ana.lopez@ - formato invalido
-OK:    carlos@dominio.com.ar
-ERROR: sindominio - formato invalido
-```
-
-- `Import-Csv` lee el archivo y expone cada fila como objeto con propiedad `$_.Email`
-- `-match` evalúa el string contra el patrón y retorna `$true` o `$false`
-- `$PSScriptRoot` apunta a la carpeta del script, no al directorio de ejecución
 
 ---
 
@@ -302,40 +273,8 @@ ERROR: sindominio - formato invalido
 
 > Script: [scripts/buscar_ip_en_log.ps1](scripts/buscar_ip_en_log.ps1)
 
-**Escenario:** se tiene un log del sistema y se quiere extraer todas las direcciones IP que aparecen en él.
+Caso: se tiene un log del sistema y se quiere extraer todas las direcciones IP que aparecen en él.
 
-```powershell
-$patron = '\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
+![captura de pantalla](assets/sc01.png) 
 
-$log = @(
-    "[2026-04-21 08:00] Conexion desde 192.168.1.10 aceptada",
-    "[2026-04-21 08:05] Intento fallido desde 10.0.0.5",
-    "[2026-04-21 08:10] Sin actividad registrada",
-    "[2026-04-21 08:15] Conexion desde 172.16.0.3 rechazada"
-)
 
-foreach ($linea in $log) {
-    if ($linea -match $patron) {
-        Write-Host "IP encontrada: $($matches[0])  |  Linea: $linea"
-    }
-}
-```
-
-**Output esperado:**
-```
-IP encontrada: 192.168.1.10  |  Linea: [2026-04-21 08:00] Conexion desde 192.168.1.10 aceptada
-IP encontrada: 10.0.0.5      |  Linea: [2026-04-21 08:05] Intento fallido desde 10.0.0.5
-IP encontrada: 172.16.0.3    |  Linea: [2026-04-21 08:15] Conexion desde 172.16.0.3 rechazada
-```
-
-**Desglose del patrón `\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b`:**
-
-| Sección | Qué hace |
-|---------|----------|
-| `\b` | Límite de palabra — evita capturar números dentro de otro número |
-| `\d{1,3}` | Entre 1 y 3 dígitos (un octeto de la IP) |
-| `\.` | Punto literal separador |
-| *(repetido ×4)* | Cubre los 4 octetos de una IPv4 |
-
-- `$matches[0]` contiene la coincidencia completa (la IP encontrada)
-- La línea sin IP no aparece en el output porque `-match` retorna `$false`
