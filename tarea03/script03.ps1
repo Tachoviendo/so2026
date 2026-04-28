@@ -15,3 +15,19 @@ foreach ($grupo in $grupos) {
           Write-Host "Grupo '$grupo' creado."
       }
 }
+
+# 2. Usuarios locales
+Write-Host "Creando usuarios locales..."
+
+$usuarios = @("ana.admin", "bruno.soporte", "carla.docente")
+
+foreach ($usuario in $usuarios) {
+    $existe = Get-LocalUser | Where-Object { $_.Name -eq $usuario }
+    if ($existe) {
+        Write-Host "Usuario '$usuario' ya existe."
+    } else {
+        $pass = ConvertTo-SecureString "nacho123!" -AsPlainText -Force #tuve que poner -Force porque sino me daba error. 
+        New-LocalUser -Name $usuario -Password $pass 
+        Write-Host "Usuario '$usuario' creado."
+    }
+}
