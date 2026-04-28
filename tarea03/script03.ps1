@@ -50,3 +50,23 @@ foreach ($a in $asignaciones) {
         Write-Host "Usuario '$($a.Usuario)' agregado a '$($a.Grupo)'."
     }
 }
+
+# 4. Estructura de carpetas C:\Empresa
+Write-Host "Creando estructura de carpetas..."
+
+$carpetas = @(
+    "C:\Empresa",
+    "C:\Empresa\Administracion",
+    "C:\Empresa\Soporte",
+    "C:\Empresa\Docentes",
+    "C:\Empresa\Compartida"
+)
+
+foreach ($carpeta in $carpetas) {
+    if (Test-Path $carpeta) {
+        Write-Host "Carpeta '$carpeta' ya existe."
+    } else {
+        New-Item -ItemType Directory -Path $carpeta
+        Write-Host "Carpeta '$carpeta' creada."
+    }
+}
