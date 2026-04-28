@@ -80,3 +80,18 @@ if (Test-Path "C:\Respaldos") {
     New-Item -ItemType Directory -Path "C:\Respaldos"
     Write-Host "Carpeta 'C:\Respaldos' creada."
 }
+
+# 6 y 7. Respaldo de C:\Empresa en C:\Respaldos\Empresa 
+Write-Host "Realizando respaldo..."
+
+if (Test-Path "C:\Respaldos\Empresa") {
+    Write-Host "Respaldo previo encontrado. Eliminando..."
+    Remove-Item -Path "C:\Respaldos\Empresa" -Recurse -Force
+    Write-Host "Respaldo anterior eliminado."
+}
+
+Copy-Item -Path "C:\Empresa" -Destination "C:\Respaldos\Empresa" -Recurse
+Write-Host "Respaldo creado en 'C:\Respaldos\Empresa'."
+
+
+
