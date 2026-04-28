@@ -70,3 +70,13 @@ foreach ($carpeta in $carpetas) {
         Write-Host "Carpeta '$carpeta' creada."
     }
 }
+
+# 5. Carpeta de respaldos
+Write-Host "Verificando carpeta de respaldos..."
+
+if (Test-Path "C:\Respaldos") {
+    Write-Host "Carpeta 'C:\Respaldos' ya existe."
+} else {
+    New-Item -ItemType Directory -Path "C:\Respaldos"
+    Write-Host "Carpeta 'C:\Respaldos' creada."
+}
