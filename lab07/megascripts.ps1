@@ -131,7 +131,7 @@ Get-Location
 Set-Location $base
 Write-Host "Cambiado a: $base"
 
-Write-Host "`nContenido recursivo de $base:"
+Write-Host "`nContenido recursivo de ${base}:"
 Get-ChildItem -Recurse
 
 Set-Location ..
