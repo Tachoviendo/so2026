@@ -31,3 +31,22 @@ foreach ($usuario in $usuarios) {
         Write-Host "Usuario '$usuario' creado."
     }
 }
+
+# 3. Asignar usuarios a grupos
+Write-Host "Asignando usuarios a grupos..."
+
+$asignaciones = @(
+    @{ Usuario = "ana.admin";     Grupo = "Administracion" },
+    @{ Usuario = "bruno.soporte"; Grupo = "Soporte" },
+    @{ Usuario = "carla.docente"; Grupo = "Docentes" }
+)
+
+foreach ($a in $asignaciones) {
+    $existe = Get-LocalGroupMember -Group $a.Grupo | Where-Object { $_.Name -like "*$($a.Usuario)" }
+    if ($existe) {
+        Write-Host "Usuario '$($a.Usuario)' ya pertenece a '$($a.Grupo)'."
+    } else {
+        Add-LocalGroupMember -Group $a.Grupo -Member $a.Usuario
+        Write-Host "Usuario '$($a.Usuario)' agregado a '$($a.Grupo)'."
+    }
+}
