@@ -1,7 +1,12 @@
-#megascript con un montón de cosas 
+#megascript con un montón de cosas
 
+function Pausar($msg) {
+    Write-Host "`n--- Fin: $msg ---"
+    $r = Read-Host "Enter para continuar (n para salir)"
+    if ($r -eq 'n') { Write-Host "Script interrumpido."; exit }
+}
 
-#creación de carpetas: 
+#1. creación de carpetas:
 
 $base = "LaboratorioPS"
 
@@ -14,7 +19,9 @@ Write-Host "Directorio creado: $base\Reportes"
 New-Item -ItemType Directory -Path "$base\Respaldo"  -Force | Out-Null
 Write-Host "Directorio creado: $base\Respaldo"
 
-#creación de archivos en Logs:
+Pausar "Parte 1 - Creacion de carpetas"
+
+#2. creación de archivos en Logs:
 
 New-Item -ItemType File -Path "$base\Logs\log_error_01.txt" -Force | Out-Null
 Write-Host "Archivo creado: log_error_01.txt"
@@ -27,7 +34,9 @@ Write-Host "Archivo creado: usuarios.txt"
 New-Item -ItemType File -Path "$base\Logs\ips.txt"          -Force | Out-Null
 Write-Host "Archivo creado: ips.txt"
 
-#carga de contenido a archivos:
+Pausar "Parte 2 - Creacion de archivos"
+
+#3 y 4. carga de contenido a archivos:
 
 # dataset usado: https://github.com/SoftManiaTech/sample_log_files/blob/master/Linux/Linux_2k.log
 Set-Content -Path "$base\Logs\log_error_01.txt" -Value @"
@@ -123,6 +132,8 @@ IP: 10.10.10.10
 "@
 Write-Host "Contenido cargado en ips.txt"
 
+Pausar "Partes 3 y 4 - Carga de contenido"
+
 #5. navegación y listado:
 
 Write-Host "`nUbicacion actual:"
@@ -136,6 +147,8 @@ Get-ChildItem -Recurse
 
 Set-Location ..
 
+Pausar "Parte 5 - Navegacion y listado"
+
 #6. búsqueda por nombre:
 
 Write-Host "`nTodos los archivos .txt:"
@@ -146,6 +159,8 @@ Get-ChildItem -Path $base -Recurse | Where-Object { $_.Name -like "log_*" }
 
 Write-Host "`nArchivos que cumplen regex (log_ ... .txt):"
 Get-ChildItem -Path $base -Recurse | Where-Object { $_.Name -match "^log_.*\.txt$" }
+
+Pausar "Parte 6 - Busqueda por nombre"
 
 #7. búsqueda de texto dentro de archivos:
 
@@ -172,6 +187,8 @@ Write-Host "Busqueda tickets completada"
 
 Write-Host "Resultados guardados en: $resultados"
 
+Pausar "Parte 7 - Busqueda de texto dentro de archivos"
+
 #8. RegEx - detectar archivos cuyo contenido contenga patrones:
 #Cambia respecto a el ejercicio anterior ya que aqui tengo que buscar que archivos presentan estos patrones. y no al reves
 Write-Host "`nArchivos con direcciones IP:"
@@ -185,6 +202,8 @@ $archivos | Where-Object { (Get-Content $_.FullName) -match "^ERROR" } | Select-
 
 Write-Host "`nArchivos con tickets de 5 digitos:"
 $archivos | Where-Object { (Get-Content $_.FullName) -match "Ticket\s+\d{5}" } | Select-Object Name
+
+Pausar "Parte 8 - RegEx"
 
 #9. generación de reporte:
 
@@ -218,7 +237,12 @@ $tickets | Add-Content -Path $reporte
 
 Write-Host "Reporte generado en: $reporte"
 
+Pausar "Parte 9 - Generacion de reporte"
+
 #10. copiar reporte a Respaldo:
 
 Copy-Item -Path $reporte -Destination "$base\Respaldo\"
 Write-Host "Reporte copiado a: $base\Respaldo\"
+
+Write-Host "`n--- Fin: Parte 10 - Copia a Respaldo ---"
+Write-Host "Script completado."
