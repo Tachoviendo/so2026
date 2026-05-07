@@ -19,3 +19,16 @@ echo "PARTE 2. Archivos creados."
 echo "Ruta actual: $(pwd)"
 ls -l
 
+
+# ── Parte 3: Usuarios, grupos y permisos ────────────────────
+if getent group estudiantes_linux > /dev/null 2>&1; then
+    echo "PARTE 3. Grupo 'estudiantes_linux' ya existe."
+else
+    sudo groupadd estudiantes_linux
+    echo "PARTE 3. Grupo 'estudiantes_linux' creado."
+fi
+
+sudo chgrp estudiantes_linux ~/laboratorio_linux/documentos/informe.txt
+chmod 640 ~/laboratorio_linux/documentos/informe.txt
+echo "PARTE 3. Grupo y permisos 640 asignados a informe.txt."
+
