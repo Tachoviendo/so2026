@@ -3,7 +3,10 @@
 function Pausar($msg) {
     Write-Host "`n--- Fin: $msg ---"
     $r = Read-Host "Enter para continuar (n para salir)"
-    if ($r -eq 'n') { Write-Host "Script interrumpido."; exit }
+    if ($r -eq 'n') { 
+        Write-Host "Script interrumpido."; 
+        exit 
+    }
 }
 
 #1. creación de carpetas:
