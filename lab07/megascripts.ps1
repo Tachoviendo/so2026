@@ -146,7 +146,7 @@ Set-Location $base
 Write-Host "Cambiado a: $base"
 
 Write-Host "`nContenido recursivo de ${base}:"
-Get-ChildItem -Recurse
+Get-ChildItem -Recurse | Format-Table Name, LastWriteTime, Length -AutoSize
 
 Set-Location ..
 
@@ -201,7 +201,7 @@ Write-Host "`nArchivos con correos electronicos:"
 $archivos | Where-Object { (Get-Content $_.FullName) -match "[^@\s]+@[^@\s]+\.[^@\s]+" } | Select-Object Name
 
 Write-Host "`nArchivos con lineas que comienzan con ERROR:"
-$archivos | Where-Object { (Get-Content $_.FullName) -match "^ERROR" } | Select-Object Name
+$archivos | Where-Object { (Get-Content $_.FullName) -match "ERROR" } | Select-Object Name
 
 Write-Host "`nArchivos con tickets de 5 digitos:"
 $archivos | Where-Object { (Get-Content $_.FullName) -match "Ticket\s+\d{5}" } | Select-Object Name
