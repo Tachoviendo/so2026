@@ -155,13 +155,13 @@ Pausar "Parte 5 - Navegacion y listado"
 #6. búsqueda por nombre:
 
 Write-Host "`nTodos los archivos .txt:"
-Get-ChildItem -Path $base -Recurse -Filter "*.txt" | Select-Object Name, LastWriteTime, Length
+Get-ChildItem -Path $base -Recurse -Filter "*.txt" | ForEach-Object { Write-Host $_.FullName }
 
 Write-Host "`nArchivos que comienzan con log_:"
-Get-ChildItem -Path $base -Recurse | Where-Object { $_.Name -like "log_*" } | Select-Object Name, LastWriteTime, Length
+Get-ChildItem -Path $base -Recurse | Where-Object { $_.Name -like "log_*" } | ForEach-Object { Write-Host $_.FullName }
 
 Write-Host "`nArchivos que cumplen regex (log_ ... .txt):"
-Get-ChildItem -Path $base -Recurse | Where-Object { $_.Name -match "^log_.*\.txt$" } | Select-Object Name, LastWriteTime, Length
+Get-ChildItem -Path $base -Recurse | Where-Object { $_.Name -match "^log_.*\.txt$" } | ForEach-Object { Write-Host $_.FullName }
 
 Pausar "Parte 6 - Busqueda por nombre"
 
