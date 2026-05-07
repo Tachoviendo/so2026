@@ -196,16 +196,16 @@ Pausar "Parte 7 - Busqueda de texto dentro de archivos"
 #8. RegEx - detectar archivos cuyo contenido contenga patrones:
 #Cambia respecto a el ejercicio anterior ya que aqui tengo que buscar que archivos presentan estos patrones. y no al reves
 Write-Host "`nArchivos con direcciones IP:"
-$archivos | Where-Object { (Get-Content $_.FullName) -match "\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b" } | Select-Object Name
+$archivos | Where-Object { (Get-Content $_.FullName) -match "\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b" } | ForEach-Object { Write-Host $_.Name }
 
 Write-Host "`nArchivos con correos electronicos:"
-$archivos | Where-Object { (Get-Content $_.FullName) -match "[^@\s]+@[^@\s]+\.[^@\s]+" } | Select-Object Name
+$archivos | Where-Object { (Get-Content $_.FullName) -match "[^@\s]+@[^@\s]+\.[^@\s]+" } | ForEach-Object { Write-Host $_.Name }
 
 Write-Host "`nArchivos con lineas que comienzan con ERROR:"
-$archivos | Where-Object { (Get-Content $_.FullName) -match "ERROR" } | Select-Object Name
+$archivos | Where-Object { (Get-Content $_.FullName) -match "ERROR" } | ForEach-Object { Write-Host $_.Name }
 
 Write-Host "`nArchivos con tickets de 5 digitos:"
-$archivos | Where-Object { (Get-Content $_.FullName) -match "Ticket\s+\d{5}" } | Select-Object Name
+$archivos | Where-Object { (Get-Content $_.FullName) -match "Ticket\s+\d{5}" } | ForEach-Object { Write-Host $_.Name }
 
 Pausar "Parte 8 - RegEx"
 
