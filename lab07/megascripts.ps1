@@ -142,13 +142,14 @@ Pausar "Partes 3 y 4 - Carga de contenido"
 Write-Host "`nUbicacion actual:"
 Get-Location
 
+$ubicacionOriginal = Get-Location
 Set-Location $base
 Write-Host "Cambiado a: $base"
 
 Write-Host "`nContenido recursivo de ${base}:"
 Get-ChildItem -Recurse | Format-Table Name, LastWriteTime, Length -AutoSize
 
-Set-Location ..
+Set-Location $ubicacionOriginal
 
 Pausar "Parte 5 - Navegacion y listado"
 
