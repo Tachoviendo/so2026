@@ -81,7 +81,34 @@ mkdir -p $base/reportes
 echo "dirs creados!"
 
 #parte d 
+echo "archivos con info"
+#estudiante 1 
+echo "Nombre de usuario: estudiante1 "> $base/programacion/info_estudiante1.txt 
+echo "Grupo: programación "> $base/programacion/info_estudiante1.txt 
+echo "Fecha de creación $(date '+%Y-%m-%d') "> $base/programacion/info_estudiante1.txt 
 
+#estudiante 2
+echo "Nombre de usuario: estudiante2 "> $base/redes/info_estudiante2.txt 
+echo "Grupo: redes"> $base/redes/info_estudiante2.txt 
+echo "Fecha de creación $(date '+%Y-%m-%d') "> $base/redes/info_estudiante2.txt 
+#estudiante 3
+echo "Nombre de usuario: estudiante3 "> $base/bd/info_estudiante3.txt 
+echo "Grupo: bd"> $base/bd/info_estudiante3.txt 
+echo "Fecha de creación $(date '+%Y-%m-%d') "> $base/bd/info_estudiante3.txt 
+
+#parte e 
+
+echo "asignando permisos"
+
+chmod 770 $base/programacion 
+chmod 770 $base/redes
+chmod 770 $base/bd 
+chmod 770 $base/reportes
+
+echo "permisos aplicados!"
+
+#parte f 
+#Se adjunta la captura en el .md de lso usuarios generados!
 
 
 
