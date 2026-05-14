@@ -29,3 +29,18 @@ y los siguientes scripts:
 - Archivo de info. 
 
 
+# Capturas!
+
+## menu en c ejecutandose
+![](assets/sc01.png) 
+
+## grupos creados
+![](assets/sc04.png) 
+
+## usuarios creados en linux
+![](assets/sc02.png) 
+
+## dirs creados en Linux
+![](assets/sc03.png) 
+
+
