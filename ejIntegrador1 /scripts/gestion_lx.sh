@@ -32,6 +32,40 @@ else
     echo "Grupo bd creado!"
 fi
 
+# parte b
+ 
+echo "Creando usuarios!"
+
+if id "Estudiante1" > /dev/null 2>&1; then 
+    echo "Estudiante1 ya existe "
+else
+    useradd -g programacion estudiante1
+    mkdir /home/estudiante1 
+    chown estudiante1 /home/estudiante1 
+    echo "Estudiante1 creado"
+fi 
+
+
+if id "Estudiante2" > /dev/null 2>&1; then 
+    echo "Estudiante2 ya existe "
+else
+    useradd -g programacion estudiante2
+    mkdir /home/estudiante2 
+    chown estudiante2 /home/estudiante2 
+    echo "Estudiante2 creado"
+fi 
+
+
+if id "Estudiante3" > /dev/null 2>&1; then 
+    echo "Estudiante3 ya existe "
+else
+    useradd -g programacion estudiante3
+    mkdir /home/estudiante2 
+    chown estudiante3 /home/estudiante3 
+    echo "Estudiante3 creado"
+
+fi
+
 
 
 
