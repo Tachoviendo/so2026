@@ -13,7 +13,7 @@ logs="$base/reportes/log_linux.txt"
 echo "Creando grupos..."
 
 # prog
-if getnet group programacion > /dev/null 2>&1; then 
+if getent group programacion > /dev/null 2>&1; then 
     echo "el grupo programacion ya existe."
 else
     groupadd programacion 
@@ -21,7 +21,7 @@ else
 fi 
 
 # redes
-if getnet group redes > /dev/null 2>&1; then 
+if getent group redes > /dev/null 2>&1; then 
     echo "el grupo redes ya existe."
 else
     groupadd redes 
@@ -29,7 +29,7 @@ else
 fi
 
 # bases de datos 
-if getnet group  bd > /dev/null 2>&1; then 
+if getent group  bd > /dev/null 2>&1; then 
     echo "el grupo bd ya existe."
 else
     groupadd bd 
@@ -85,15 +85,15 @@ echo "archivos con info"
 #estudiante 1 
 echo "Nombre de usuario: estudiante1 "> $base/programacion/info_estudiante1.txt 
 echo "Grupo: programación " >> $base/programacion/info_estudiante1.txt 
-echo "Fecha de creación $(date '+%Y-%m-%d') "> $base/programacion/info_estudiante1.txt 
+echo "Fecha de creación $(date '+%Y-%m-%d') ">> $base/programacion/info_estudiante1.txt 
 
 #estudiante 2
 echo "Nombre de usuario: estudiante2 "> $base/redes/info_estudiante2.txt 
 echo "Grupo: redes" >> $base/redes/info_estudiante2.txt 
-echo "Fecha de creación $(date '+%Y-%m-%d') "> $base/redes/info_estudiante2.txt 
+echo "Fecha de creación $(date '+%Y-%m-%d') ">> $base/redes/info_estudiante2.txt 
 #estudiante 3
-echo "Nombre de usuario: estudiante3 ">> $base/bd/info_estudiante3.txt 
-echo "Grupo: bd"> $base/bd/info_estudiante3.txt 
+echo "Nombre de usuario: estudiante3 "> $base/bd/info_estudiante3.txt 
+echo "Grupo: bd">> $base/bd/info_estudiante3.txt 
 echo "Fecha de creación $(date '+%Y-%m-%d') ">> $base/bd/info_estudiante3.txt 
 
 #parte e 
