@@ -37,7 +37,7 @@ int main() {
             }
 
         } else if (opcion == 3) {
-            printf("en proceso!")
+            printf("en proceso!\n");
         } else if (opcion == 4) {
             printf("Saliendo...\n");
             return 0;
