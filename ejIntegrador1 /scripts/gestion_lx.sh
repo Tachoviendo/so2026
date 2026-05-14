@@ -1,10 +1,14 @@
 #!/bin/bash
 
-#parte a 
-# para que todas las partes debe ejecutarse como root 
+#variables que me van a servir mas adelante: 
 
 base="/academia"
 logs="$base/reportes/log_linux.txt"
+
+
+#parte a 
+# para que todas las partes debe ejecutarse como root 
+
 
 echo "Creando grupos..."
 
@@ -65,6 +69,22 @@ else
     echo "Estudiante3 creado"
 
 fi
+
+
+#parte c
+
+echo "creando dirs" 
+mkdir -p $base/programacion
+mkdir -p $base/redes  
+mkdir -p $base/bd  
+mkdir -p $base/reportes
+echo "dirs creados!"
+
+#parte d 
+
+
+
+
 
 
 
