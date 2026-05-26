@@ -1,0 +1,4 @@
+Proceso: bash
+PID: 1328
+TID	Estado
+1328	State:	S (sleeping)
