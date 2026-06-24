@@ -29,6 +29,30 @@ Los 3 productores y el consumidor corren como hilos con `std::thread`, y el plan
 ![Ejecución del simulador](assets/sc01.png)
 
 
-### Observaciones
+### Preguntas
 
-Sin el mutex, los hilos podrían leer y modificar la cola al mismo tiempo y los datos se corromperían. El consumidor funciona como un driver: recibe solicitudes, las procesa de a una y confirma la operación. Cuando todos los productores terminan y la cola queda vacía, el consumidor se cierra limpiamente.
+**¿Por qué el orden de atención puede cambiar entre ejecuciones?**
+
+Porque el planificador del SO decide cuándo darle CPU a cada hilo y eso depende del contexto del sistema, las prioridades y los tiempos de sleep aleatorios dado el codigo que se realizo en el ej. No hay garantía de que el Proceso 1 genere su solicitud antes que el Proceso 3, ni de que el consumidor la tome en el mismo instante. cada ejecución va a ser distinta de la anterior porque es un simulador. 
+
+**¿Qué pasaría si quitamos el mutex?**
+
+Varios hilos podrían leer y escribir la cola al mismo tiempo haciedo que explote todo. Podría pasar que dos productores hagan push a la vez y se corrompa la estructura interna de la queue, o que el consumidor haga pop de una solicitud que todavía no se terminó de escribir saltando una interrupcion del sistma. 
+
+**¿Por qué el consumidor debe esperar y no consultar la cola en bucle infinito?**
+
+Si el consumidor pregunta todo el tiempo si hay algo en la cola, consume CPU innecesariamente. Usando `condition_variable` el hilo se duerme y el SO lo saca de la cola de listos, liberando el procesador para los productores u otros procesos. Solo se despierta cuando un productor le avisa que hay trabajo nuevo.
+
+La analogía sería, para que mirar todo el tiempo si aparece algo en la heladera, si puedo pedirle a alguien mas que me diga cuando haya comida 
+
+**¿Qué parte se parece al driver?**
+
+En mi opinión el hilo consumidor. Recibe solicitudes de I/O de los procesos, las atiende de a una en orden de llegada y reporta el resultado. fuera de un simulador como este, el driver hace mas o menos lo mismo, traduce las solicitudes genéricas del kernel en operaciones específicas del dispositivo y las ejecuta secuencialmente.
+
+**¿Dónde aparecen las interrupciones?**
+
+En el programa se simulan con `condition_variable::notify_one()`. Cuando un productor encola una solicitud, le avisa al consumidor que hay trabajo, similar a cómo un dispositivo real genera una interrupción de hardware para avisar al CPU que terminó una operación o que tiene datos listos para arrancar con otro proceso.
+
+**¿Qué operaciones dependen del sistema de archivos?**
+
+La escritura del log con `ofstream`. Cada vez que el consumidor atiende una solicitud, la registra en `io_log.txt` usando operaciones de I/O a disco. Internamente el SO traduce eso en llamadas al sistema (write), pasa por el kernel, el driver del disco y finalmente los datos se persisten en bloques del sistema de archivos.

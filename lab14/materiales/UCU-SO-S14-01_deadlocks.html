@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deadlocks en Sistemas Operativos</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    :root {
+      --pastel-bg: #fff7fb;
+      --pastel-pink: #ffd6e8;
+      --pastel-lilac: #e8ddff;
+      --pastel-blue: #dceeff;
+      --pastel-green: #dcf8e8;
+      --pastel-yellow: #fff0c7;
+      --pastel-coral: #ffd8cf;
+      --text-main: #2d2a32;
+      --text-soft: #5f5868;
+      --card-bg: rgba(255,255,255,0.88);
+      --shadow: 0 14px 35px rgba(92, 72, 125, 0.15);
+      --radius: 24px;
+    }
+
+    * { scroll-behavior: smooth; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, #ffe7f3 0, transparent 34%),
+        radial-gradient(circle at top right, #e1f1ff 0, transparent 32%),
+        radial-gradient(circle at bottom left, #e5ffe9 0, transparent 28%),
+        var(--pastel-bg);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      backdrop-filter: blur(16px);
+      background: rgba(255,255,255,0.78) !important;
+      box-shadow: 0 4px 20px rgba(70, 55, 92, 0.08);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      color: #6a4c93 !important;
+    }
+
+    .nav-link {
+      color: #574b68 !important;
+      font-weight: 600;
+      border-radius: 999px;
+      padding-left: 0.9rem !important;
+      padding-right: 0.9rem !important;
+    }
+
+    .nav-link:hover {
+      background: var(--pastel-lilac);
+    }
+
+    .hero {
+      padding: 7rem 0 4rem;
+    }
+
+    .hero-card, .soft-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      bottom: -70px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-blue));
+      opacity: 0.65;
+    }
+
+    .hero-title {
+      font-size: clamp(2.3rem, 5vw, 4.4rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.98;
+      color: #392f5a;
+    }
+
+    .hero-subtitle {
+      color: var(--text-soft);
+      font-size: 1.15rem;
+      max-width: 760px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .55rem .9rem;
+      border-radius: 999px;
+      font-weight: 700;
+      background: var(--pastel-yellow);
+      color: #6a4c00;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    section {
+      padding: 4.5rem 0;
+    }
+
+    .section-title {
+      font-weight: 900;
+      color: #392f5a;
+      letter-spacing: -0.04em;
+      margin-bottom: 1rem;
+    }
+
+    .section-lead {
+      color: var(--text-soft);
+      max-width: 820px;
+      font-size: 1.08rem;
+    }
+
+    .soft-card {
+      padding: 1.6rem;
+      height: 100%;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .soft-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 42px rgba(92, 72, 125, 0.2);
+    }
+
+    .icon-bubble {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      margin-bottom: 1rem;
+      color: #46335f;
+      background: linear-gradient(135deg, var(--pastel-lilac), var(--pastel-blue));
+    }
+
+    .tag {
+      display: inline-block;
+      padding: .32rem .7rem;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 800;
+      background: #f1eaff;
+      color: #5d3f88;
+      margin: .15rem;
+    }
+
+    .concept-btn {
+      border: none;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 10px 24px rgba(73, 53, 102, 0.11);
+      padding: 1rem 1.1rem;
+      width: 100%;
+      text-align: left;
+      font-weight: 800;
+      color: #43315f;
+      transition: transform .2s ease, background .2s ease;
+      min-height: 84px;
+    }
+
+    .concept-btn:hover {
+      transform: translateY(-4px);
+      background: #fbf7ff;
+    }
+
+    .concept-btn i {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      background: var(--pastel-lilac);
+      margin-right: .45rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: .3rem;
+      left: .35rem;
+      bottom: .3rem;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(var(--pastel-lilac), var(--pastel-blue), var(--pastel-green));
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.2rem;
+      background: rgba(255,255,255,0.8);
+      padding: 1rem 1rem 1rem 1.2rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(92, 72, 125, 0.08);
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.35rem;
+      top: 1.1rem;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #a78bfa;
+      border: 3px solid white;
+      box-shadow: 0 0 0 4px rgba(167,139,250,.18);
+    }
+
+    pre {
+      background: #2f2a3d;
+      color: #fff7fb;
+      border-radius: 22px;
+      padding: 1.3rem;
+      overflow-x: auto;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+      font-size: .92rem;
+    }
+
+    code { color: inherit; }
+
+    .quiz-card {
+      background: rgba(255,255,255,.9);
+      border-radius: 24px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .option-btn {
+      width: 100%;
+      border: 2px solid transparent;
+      background: #fff;
+      border-radius: 16px;
+      padding: .9rem 1rem;
+      text-align: left;
+      margin-bottom: .7rem;
+      font-weight: 650;
+      color: #3f3650;
+      box-shadow: 0 8px 18px rgba(80,60,110,.08);
+    }
+
+    .option-btn:hover {
+      background: #f7f0ff;
+      border-color: #d8c5ff;
+    }
+
+    .footer {
+      padding: 2.5rem 0;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    .gradient-box {
+      border-radius: 26px;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(255,214,232,.85), rgba(220,238,255,.9), rgba(220,248,232,.82));
+      box-shadow: var(--shadow);
+    }
+
+    .table-pastel thead th {
+      background: #efe7ff;
+      color: #453064;
+    }
+
+    .table-pastel td, .table-pastel th {
+      vertical-align: middle;
+    }
+
+    .callout {
+      border-left: 7px solid #a78bfa;
+      background: rgba(255,255,255,.78);
+      border-radius: 18px;
+      padding: 1rem 1.2rem;
+    }
+
+    .swal2-popup {
+      border-radius: 26px !important;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    }
+
+    .swal2-title { color: #392f5a !important; }
+
+    @media (max-width: 768px) {
+      .hero-card { padding: 2rem; }
+      section { padding: 3.2rem 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#inicio"><i class="fa-solid fa-triangle-exclamation me-2"></i>Deadlocks</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#conceptos">Conceptos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#condiciones">Condiciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="#estrategias">Estrategias</a></li>
+          <li class="nav-item"><a class="nav-link" href="#algoritmo">Banquero</a></li>
+          <li class="nav-item"><a class="nav-link" href="#ejercicio">Ejercicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#quiz">Quiz</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header id="inicio" class="hero">
+    <div class="container">
+      <div class="hero-card animate__animated animate__fadeInUp">
+        <span class="pill mb-3"><i class="fa-solid fa-computer"></i> Sistemas Operativos</span>
+        <h1 class="hero-title mb-4">Deadlocks: cuando los procesos quedan esperando para siempre</h1>
+        <p class="hero-subtitle mb-4">
+          Un deadlock ocurre cuando varios procesos quedan bloqueados porque cada uno espera un recurso que está retenido por otro. En esta presentación veremos cómo se producen, cómo identificarlos y qué estrategias puede aplicar un sistema operativo.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#conceptos" class="btn btn-lg btn-primary rounded-pill px-4"><i class="fa-solid fa-play me-2"></i>Comenzar</a>
+          <button class="btn btn-lg btn-light rounded-pill px-4" onclick="showIntro()"><i class="fa-solid fa-lightbulb me-2"></i>Analogía rápida</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="conceptos">
+    <div class="container">
+      <h2 class="section-title display-5">Conceptos principales</h2>
+      <p class="section-lead mb-4">Presiona cada concepto para ver una definición, una analogía y su relación con los deadlocks.</p>
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('deadlock')"><i class="fa-solid fa-lock"></i>Deadlock</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('proceso')"><i class="fa-solid fa-microchip"></i>Proceso</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('recurso')"><i class="fa-solid fa-box"></i>Recurso</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('mutex')"><i class="fa-solid fa-key"></i>Mutex / Exclusión mutua</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('semaforo')"><i class="fa-solid fa-traffic-light"></i>Semáforo</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('espera')"><i class="fa-solid fa-hourglass-half"></i>Espera bloqueante</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('grafo')"><i class="fa-solid fa-diagram-project"></i>Grafo de asignación</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('inanicion')"><i class="fa-solid fa-person-walking-arrow-loop-left"></i>Inanición</button></div>
+        <div class="col-md-6 col-lg-4"><button class="concept-btn" onclick="concept('livelock')"><i class="fa-solid fa-arrows-rotate"></i>Livelock</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="analogias">
+    <div class="container">
+      <h2 class="section-title display-5">Analogías con la vida real</h2>
+      <p class="section-lead mb-4">Los deadlocks son más fáciles de entender cuando los comparamos con situaciones cotidianas.</p>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-road"></i></div>
+            <h4>Cruce bloqueado</h4>
+            <p>Cuatro autos entran a una intersección estrecha. Cada auto quiere avanzar, pero el espacio que necesita está ocupado por otro. Nadie puede retroceder ni avanzar.</p>
+            <span class="tag">Espera circular</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-utensils"></i></div>
+            <h4>Cena con dos utensilios</h4>
+            <p>Dos personas necesitan tenedor y cuchillo para comer. Una toma el tenedor, la otra toma el cuchillo, y ambas esperan el utensilio faltante.</p>
+            <span class="tag">Retener y esperar</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-print"></i></div>
+            <h4>Impresora y escáner</h4>
+            <p>Un proceso tiene la impresora y espera el escáner. Otro tiene el escáner y espera la impresora. Ninguno libera lo que ya posee.</p>
+            <span class="tag">Recursos compartidos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="condiciones">
+    <div class="container">
+      <h2 class="section-title display-5">Las cuatro condiciones necesarias</h2>
+      <p class="section-lead mb-4">Para que exista deadlock deben cumplirse simultáneamente las cuatro condiciones de Coffman.</p>
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="timeline">
+            <div class="timeline-item">
+              <h5><i class="fa-solid fa-1 me-2"></i>Exclusión mutua</h5>
+              <p class="mb-0">Algunos recursos solo pueden ser usados por un proceso a la vez.</p>
+            </div>
+            <div class="timeline-item">
+              <h5><i class="fa-solid fa-2 me-2"></i>Retener y esperar</h5>
+              <p class="mb-0">Un proceso mantiene recursos asignados mientras espera otros recursos adicionales.</p>
+            </div>
+            <div class="timeline-item">
+              <h5><i class="fa-solid fa-3 me-2"></i>No apropiación</h5>
+              <p class="mb-0">El sistema no puede quitarle por la fuerza un recurso a un proceso; debe liberarlo voluntariamente.</p>
+            </div>
+            <div class="timeline-item">
+              <h5><i class="fa-solid fa-4 me-2"></i>Espera circular</h5>
+              <p class="mb-0">Existe una cadena circular de procesos donde cada uno espera un recurso retenido por el siguiente.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="gradient-box h-100">
+            <h4><i class="fa-solid fa-circle-nodes me-2"></i>Idea clave</h4>
+            <p>Si una de estas condiciones se rompe, el deadlock no puede producirse.</p>
+            <div class="table-responsive">
+              <table class="table table-pastel table-bordered bg-white rounded overflow-hidden">
+                <thead>
+                  <tr><th>Condición</th><th>Cómo romperla</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Exclusión mutua</td><td>Usar recursos compartibles cuando sea posible.</td></tr>
+                  <tr><td>Retener y esperar</td><td>Pedir todos los recursos al inicio.</td></tr>
+                  <tr><td>No apropiación</td><td>Permitir que el SO recupere recursos.</td></tr>
+                  <tr><td>Espera circular</td><td>Ordenar los recursos y solicitarlos siempre en el mismo orden.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <button class="btn btn-light rounded-pill" onclick="showCoffman()"><i class="fa-solid fa-question-circle me-2"></i>Ver ejemplo guiado</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="deteccion">
+    <div class="container">
+      <h2 class="section-title display-5">Cómo detectar un deadlock</h2>
+      <p class="section-lead mb-4">Una forma clásica de analizar bloqueos es representar procesos y recursos mediante un grafo.</p>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-diagram-project"></i></div>
+            <h4>Grafo de asignación de recursos</h4>
+            <p>Los procesos y recursos se representan como nodos. Una flecha de proceso a recurso indica solicitud. Una flecha de recurso a proceso indica asignación.</p>
+            <button class="btn btn-outline-primary rounded-pill" onclick="showGraphExample()">Ver ejemplo</button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-repeat"></i></div>
+            <h4>Ciclos en el grafo</h4>
+            <p>Un ciclo puede indicar deadlock. Si cada recurso tiene una única instancia, el ciclo confirma el deadlock. Si hay múltiples instancias, se requiere un análisis adicional.</p>
+            <button class="btn btn-outline-primary rounded-pill" onclick="showCycleExample()">Analizar ciclo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout mt-4">
+        <strong>Ejemplo:</strong> P1 tiene R1 y espera R2. P2 tiene R2 y espera R1. El sistema queda bloqueado porque ningún proceso puede continuar sin que el otro libere su recurso.
+      </div>
+    </div>
+  </section>
+
+  <section id="estrategias">
+    <div class="container">
+      <h2 class="section-title display-5">Estrategias frente a deadlocks</h2>
+      <p class="section-lead mb-4">El sistema operativo puede prevenir, evitar, detectar y recuperar, o directamente ignorar ciertos deadlocks según el contexto.</p>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-shield-halved"></i></div>
+            <h4>Prevención</h4>
+            <p>Impide que se cumpla alguna condición necesaria del deadlock.</p>
+            <span class="tag">Reglas estrictas</span>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-route"></i></div>
+            <h4>Evitación</h4>
+            <p>Decide si una asignación es segura antes de conceder recursos.</p>
+            <span class="tag">Estado seguro</span>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h4>Detección</h4>
+            <p>Permite que el bloqueo ocurra y luego lo identifica.</p>
+            <span class="tag">Monitoreo</span>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-heart-pulse"></i></div>
+            <h4>Recuperación</h4>
+            <p>Libera recursos, finaliza procesos o revierte operaciones para salir del bloqueo.</p>
+            <span class="tag">Corrección</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered table-pastel bg-white shadow-sm rounded overflow-hidden">
+          <thead>
+            <tr><th>Estrategia</th><th>Ventaja</th><th>Desventaja</th><th>Ejemplo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Prevención</td><td>Evita el problema desde el diseño.</td><td>Puede reducir la concurrencia.</td><td>Solicitar recursos en orden fijo.</td></tr>
+            <tr><td>Evitación</td><td>Permite más flexibilidad.</td><td>Requiere conocer necesidades máximas.</td><td>Algoritmo del banquero.</td></tr>
+            <tr><td>Detección</td><td>No restringe tanto al sistema.</td><td>El bloqueo puede ocurrir.</td><td>Buscar ciclos en grafos.</td></tr>
+            <tr><td>Recuperación</td><td>Permite continuar el sistema.</td><td>Puede perder trabajo o finalizar procesos.</td><td>Abortar un proceso bloqueado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="algoritmo">
+    <div class="container">
+      <h2 class="section-title display-5">Algoritmo del banquero</h2>
+      <p class="section-lead mb-4">Es una técnica de evitación. Antes de conceder recursos, verifica si el sistema queda en un estado seguro.</p>
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-6">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-solid fa-building-columns"></i></div>
+            <h4>Analogía bancaria</h4>
+            <p>Un banco no presta todo su dinero al primer cliente. Evalúa si podrá responder a futuros retiros y préstamos. El sistema operativo hace algo parecido con los recursos.</p>
+            <button class="btn btn-outline-primary rounded-pill" onclick="showBanker()">Ver definición interactiva</button>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="soft-card">
+            <h4>Elementos principales</h4>
+            <ul class="mb-0">
+              <li><strong>Disponible:</strong> recursos libres actualmente.</li>
+              <li><strong>Asignado:</strong> recursos que ya tiene cada proceso.</li>
+              <li><strong>Máximo:</strong> cantidad máxima que podría pedir cada proceso.</li>
+              <li><strong>Necesidad:</strong> máximo menos asignado.</li>
+              <li><strong>Estado seguro:</strong> existe un orden donde todos pueden terminar.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout mt-4">
+        <strong>Importante:</strong> el algoritmo del banquero evita deadlocks, pero no siempre se usa en sistemas reales porque requiere conocer por adelantado la demanda máxima de recursos.
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="container">
+      <h2 class="section-title display-5">Ejercicio práctico en C++</h2>
+      <p class="section-lead mb-4">Construir una simulación simple de procesos que compiten por recursos y pueden caer en deadlock.</p>
+
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="soft-card">
+            <div class="icon-bubble"><i class="fa-brands fa-cuttlefish"></i></div>
+            <h4>Consigna</h4>
+            <p>Crear un programa en C++ que simule dos procesos y dos recursos compartidos. Cada proceso debe intentar tomar los recursos en distinto orden para evidenciar una posible situación de deadlock.</p>
+            <h5>Requisitos</h5>
+            <ul>
+              <li>Usar <strong>std::thread</strong> para representar procesos.</li>
+              <li>Usar <strong>std::mutex</strong> para representar recursos exclusivos.</li>
+              <li>Mostrar por consola cuándo un proceso toma o espera un recurso.</li>
+              <li>Agregar una segunda versión que evite el deadlock usando un orden fijo de adquisición.</li>
+              <li>Incluir una breve explicación del resultado observado.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="soft-card">
+            <h4><i class="fa-solid fa-code me-2"></i>Código base orientativo</h4>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;chrono&gt;
+
+std::mutex recursoA;
+std::mutex recursoB;
+
+void proceso1() {
+    std::cout &lt;&lt; "P1 intenta tomar Recurso A\n";
+    recursoA.lock();
+    std::cout &lt;&lt; "P1 tomo Recurso A\n";
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    std::cout &lt;&lt; "P1 intenta tomar Recurso B\n";
+    recursoB.lock();
+    std::cout &lt;&lt; "P1 tomo Recurso B\n";
+
+    recursoB.unlock();
+    recursoA.unlock();
+}
+
+void proceso2() {
+    std::cout &lt;&lt; "P2 intenta tomar Recurso B\n";
+    recursoB.lock();
+    std::cout &lt;&lt; "P2 tomo Recurso B\n";
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    std::cout &lt;&lt; "P2 intenta tomar Recurso A\n";
+    recursoA.lock();
+    std::cout &lt;&lt; "P2 tomo Recurso A\n";
+
+    recursoA.unlock();
+    recursoB.unlock();
+}
+
+int main() {
+    std::thread t1(proceso1);
+    std::thread t2(proceso2);
+
+    t1.join();
+    t2.join();
+
+    std::cout &lt;&lt; "Fin del programa\n";
+    return 0;
+}</code></pre>
+            <button class="btn btn-primary rounded-pill" onclick="showExerciseHint()"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Ver pista para evitar el deadlock</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="soft-card mt-4">
+        <h4>Versión mejorada esperada</h4>
+        <p>Para evitar el deadlock, ambos procesos deben solicitar los recursos en el mismo orden. Por ejemplo: siempre tomar primero Recurso A y luego Recurso B.</p>
+        <div class="row g-3">
+          <div class="col-md-4"><span class="tag">Orden fijo</span></div>
+          <div class="col-md-4"><span class="tag">Evita espera circular</span></div>
+          <div class="col-md-4"><span class="tag">Mejora la sincronización</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <div class="container">
+      <h2 class="section-title display-5">Quiz final</h2>
+      <p class="section-lead mb-4">Responde las 10 preguntas para repasar los conceptos principales.</p>
+      <div class="quiz-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+          <h4 class="mb-0" id="questionTitle">Pregunta 1</h4>
+          <span class="tag" id="scoreTag">Puntaje: 0</span>
+        </div>
+        <p class="fs-5 fw-semibold" id="questionText"></p>
+        <div id="options"></div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button class="btn btn-light rounded-pill" onclick="restartQuiz()"><i class="fa-solid fa-rotate-left me-2"></i>Reiniciar</button>
+          <span class="text-muted" id="progressText"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-0">Presentación interactiva sobre deadlocks en Sistemas Operativos.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const concepts = {
+      deadlock: {
+        title: 'Deadlock',
+        icon: '🔒',
+        definition: 'Situación en la que un conjunto de procesos queda bloqueado porque cada proceso espera un recurso retenido por otro proceso del mismo conjunto.',
+        analogy: 'Como cuatro autos que entran a una esquina angosta y cada uno bloquea el camino del siguiente.',
+        io: 'En sistemas operativos puede ocurrir con archivos, impresoras, memoria, semáforos, mutex, dispositivos de entrada/salida u otros recursos compartidos.'
+      },
+      proceso: {
+        title: 'Proceso',
+        icon: '🧠',
+        definition: 'Programa en ejecución que necesita recursos del sistema para avanzar.',
+        analogy: 'Como una persona realizando una tarea que necesita herramientas para completarla.',
+        io: 'Un proceso puede solicitar CPU, memoria, archivos, dispositivos o mecanismos de sincronización.'
+      },
+      recurso: {
+        title: 'Recurso',
+        icon: '📦',
+        definition: 'Elemento limitado del sistema que puede ser solicitado, usado y liberado por procesos.',
+        analogy: 'Como una única impresora compartida por varias personas.',
+        io: 'Los recursos pueden ser físicos, como discos o impresoras, o lógicos, como locks, archivos o secciones críticas.'
+      },
+      mutex: {
+        title: 'Mutex / Exclusión mutua',
+        icon: '🗝️',
+        definition: 'Mecanismo que permite que solo un hilo o proceso acceda a una sección crítica o recurso compartido a la vez.',
+        analogy: 'Como la llave de un baño individual: quien tiene la llave entra; los demás esperan.',
+        io: 'El uso incorrecto de varios mutex puede generar deadlocks si se toman en distinto orden.'
+      },
+      semaforo: {
+        title: 'Semáforo',
+        icon: '🚦',
+        definition: 'Mecanismo de sincronización que controla el acceso a uno o varios recursos mediante un contador.',
+        analogy: 'Como un estacionamiento con cupos: si hay lugar, entra un auto; si no, espera.',
+        io: 'Puede regular accesos concurrentes, pero una mala coordinación puede causar bloqueos.'
+      },
+      espera: {
+        title: 'Espera bloqueante',
+        icon: '⏳',
+        definition: 'Estado en el que un proceso no puede continuar hasta que ocurra un evento o se libere un recurso.',
+        analogy: 'Como esperar que liberen una sala para poder entrar a una reunión.',
+        io: 'La espera bloqueante es normal, pero puede volverse problemática si se combina con retención de recursos.'
+      },
+      grafo: {
+        title: 'Grafo de asignación de recursos',
+        icon: '🕸️',
+        definition: 'Modelo que representa qué procesos solicitan recursos y qué recursos están asignados a procesos.',
+        analogy: 'Como un mapa de préstamos: quién tiene qué y quién está esperando qué.',
+        io: 'Permite visualizar ciclos y analizar posibles situaciones de deadlock.'
+      },
+      inanicion: {
+        title: 'Inanición',
+        icon: '🥀',
+        definition: 'Situación en la que un proceso espera indefinidamente porque otros procesos reciben prioridad continuamente.',
+        analogy: 'Como una persona en una fila que nunca es atendida porque siempre pasan otros antes.',
+        io: 'No es exactamente un deadlock, porque el sistema sigue avanzando, pero un proceso queda perjudicado.'
+      },
+      livelock: {
+        title: 'Livelock',
+        icon: '🔄',
+        definition: 'Situación en la que los procesos no están bloqueados, pero cambian de estado continuamente sin progresar.',
+        analogy: 'Como dos personas que se mueven al mismo lado para dejarse pasar y nunca logran cruzarse.',
+        io: 'A diferencia del deadlock, hay actividad, pero no hay avance útil.'
+      }
+    };
+
+    function concept(key) {
+      const c = concepts[key];
+      Swal.fire({
+        title: `${c.icon} ${c.title}`,
+        html: `<div class="text-start">
+          <p><strong>Definición:</strong> ${c.definition}</p>
+          <p><strong>Analogía:</strong> ${c.analogy}</p>
+          <p><strong>Relación con Sistemas Operativos:</strong> ${c.io}</p>
+        </div>`,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    function showIntro() {
+      Swal.fire({
+        title: '🚗 Analogía rápida',
+        html: '<p>Imagina una intersección donde todos los autos avanzaron un poco y quedaron bloqueándose entre sí. Cada auto necesita que otro se mueva, pero nadie puede hacerlo. Eso es similar a un deadlock.</p>',
+        confirmButtonText: 'Continuar',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    function showCoffman() {
+      Swal.fire({
+        title: '🧩 Ejemplo con dos recursos',
+        html: `<div class="text-start">
+          <p><strong>P1</strong> tiene la impresora y espera el escáner.</p>
+          <p><strong>P2</strong> tiene el escáner y espera la impresora.</p>
+          <p>Se cumplen exclusión mutua, retener y esperar, no apropiación y espera circular. Por eso puede haber deadlock.</p>
+        </div>`,
+        confirmButtonText: 'Verificado',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    function showGraphExample() {
+      Swal.fire({
+        title: '🕸️ Grafo de asignación',
+        html: `<div class="text-start">
+          <p><strong>P1 → R2</strong>: P1 solicita R2.</p>
+          <p><strong>R1 → P1</strong>: R1 está asignado a P1.</p>
+          <p><strong>P2 → R1</strong>: P2 solicita R1.</p>
+          <p><strong>R2 → P2</strong>: R2 está asignado a P2.</p>
+          <p>El ciclo P1 → R2 → P2 → R1 → P1 muestra el bloqueo.</p>
+        </div>`,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    function showCycleExample() {
+      Swal.fire({
+        title: '🔁 Ciclos y deadlock',
+        html: `<div class="text-start">
+          <p>Si cada recurso tiene una sola instancia, un ciclo en el grafo confirma deadlock.</p>
+          <p>Si los recursos tienen múltiples instancias, el ciclo puede ser una señal de riesgo, pero se necesita analizar disponibilidad y asignaciones.</p>
+        </div>`,
+        confirmButtonText: 'Continuar',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    function showBanker() {
+      Swal.fire({
+        title: '🏦 Algoritmo del banquero',
+        html: `<div class="text-start">
+          <p>Antes de asignar recursos, el sistema evalúa si todavía existe un orden posible para que todos los procesos finalicen.</p>
+          <p>Si ese orden existe, el estado es seguro. Si no existe, la asignación se rechaza o se pospone.</p>
+        </div>`,
+        confirmButtonText: 'Claro',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    function showExerciseHint() {
+      Swal.fire({
+        title: '💡 Pista',
+        html: `<div class="text-start">
+          <p>Para evitar el deadlock, ambos procesos deben tomar los recursos en el mismo orden.</p>
+          <p>Ejemplo: P1 toma A y luego B. P2 también toma A y luego B.</p>
+          <p>Así se rompe la condición de espera circular.</p>
+        </div>`,
+        confirmButtonText: 'Aplicar pista',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      });
+    }
+
+    const questions = [
+      {
+        q: '¿Qué es un deadlock?',
+        options: ['Un proceso que consume mucha CPU', 'Un conjunto de procesos bloqueados esperando recursos entre sí', 'Una falla de memoria virtual', 'Una interrupción de hardware'],
+        answer: 1,
+        explain: 'Un deadlock ocurre cuando procesos quedan esperando recursos retenidos por otros procesos del mismo conjunto.'
+      },
+      {
+        q: '¿Cuál de estas es una condición necesaria para que exista deadlock?',
+        options: ['Fragmentación externa', 'Exclusión mutua', 'Multiprogramación', 'Paginación'],
+        answer: 1,
+        explain: 'La exclusión mutua es una de las cuatro condiciones de Coffman.'
+      },
+      {
+        q: '¿Qué significa retener y esperar?',
+        options: ['Un proceso libera todo antes de pedir más', 'Un proceso mantiene recursos mientras espera otros', 'Un proceso nunca solicita recursos', 'Un proceso solo usa CPU'],
+        answer: 1,
+        explain: 'Retener y esperar implica conservar recursos asignados mientras se solicitan otros.'
+      },
+      {
+        q: '¿Qué condición se rompe si todos los procesos toman recursos en el mismo orden?',
+        options: ['Espera circular', 'Exclusión mutua', 'No apropiación', 'Uso de CPU'],
+        answer: 0,
+        explain: 'Un orden global de adquisición evita que se forme una cadena circular de espera.'
+      },
+      {
+        q: '¿Qué representa una flecha de recurso a proceso en un grafo de asignación?',
+        options: ['El proceso solicita el recurso', 'El recurso está asignado al proceso', 'El recurso fue eliminado', 'El proceso terminó'],
+        answer: 1,
+        explain: 'La flecha recurso → proceso indica asignación del recurso.'
+      },
+      {
+        q: '¿Qué estrategia permite que el deadlock ocurra y luego lo identifica?',
+        options: ['Prevención', 'Evitación', 'Detección', 'Planificación Round Robin'],
+        answer: 2,
+        explain: 'La detección no impide necesariamente el bloqueo; lo identifica para luego recuperar el sistema.'
+      },
+      {
+        q: '¿Qué busca el algoritmo del banquero?',
+        options: ['Aumentar la velocidad de disco', 'Evitar estados inseguros', 'Eliminar todos los mutex', 'Asignar siempre todos los recursos'],
+        answer: 1,
+        explain: 'El algoritmo del banquero concede recursos solo si el sistema queda en un estado seguro.'
+      },
+      {
+        q: '¿Cuál es una posible forma de recuperación ante deadlock?',
+        options: ['Finalizar un proceso bloqueado', 'Aumentar el tamaño de la pantalla', 'Cambiar el idioma del sistema', 'Eliminar la memoria caché del navegador'],
+        answer: 0,
+        explain: 'Una forma de recuperación es abortar procesos para liberar recursos.'
+      },
+      {
+        q: '¿Qué diferencia al livelock del deadlock?',
+        options: ['En livelock hay actividad pero no progreso útil', 'En livelock no hay procesos', 'En deadlock todos terminan correctamente', 'Son exactamente lo mismo'],
+        answer: 0,
+        explain: 'En livelock los procesos siguen activos, pero no logran avanzar.'
+      },
+      {
+        q: 'En C++, ¿qué elemento puede usarse para representar un recurso exclusivo?',
+        options: ['std::vector', 'std::mutex', 'std::string', 'std::cout'],
+        answer: 1,
+        explain: 'std::mutex permite controlar acceso exclusivo a una sección crítica o recurso.'
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function renderQuestion() {
+      const q = questions[current];
+      document.getElementById('questionTitle').textContent = `Pregunta ${current + 1}`;
+      document.getElementById('questionText').textContent = q.q;
+      document.getElementById('scoreTag').textContent = `Puntaje: ${score}`;
+      document.getElementById('progressText').textContent = `${current + 1} / ${questions.length}`;
+      const options = document.getElementById('options');
+      options.innerHTML = '';
+      q.options.forEach((op, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn animate__animated animate__fadeIn';
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${op}`;
+        btn.onclick = () => answerQuestion(idx);
+        options.appendChild(btn);
+      });
+    }
+
+    function answerQuestion(idx) {
+      const q = questions[current];
+      const correct = idx === q.answer;
+      if (correct) score++;
+      Swal.fire({
+        title: correct ? '✅ Correcto' : '❌ Revisar',
+        html: `<p>${q.explain}</p>`,
+        confirmButtonText: current === questions.length - 1 ? 'Ver resultado' : 'Siguiente',
+        confirmButtonColor: correct ? '#22c55e' : '#f97316',
+        background: '#fff7fb'
+      }).then(() => {
+        current++;
+        if (current < questions.length) {
+          renderQuestion();
+        } else {
+          finishQuiz();
+        }
+      });
+    }
+
+    function finishQuiz() {
+      const percent = Math.round((score / questions.length) * 100);
+      let msg = 'Buen repaso. Conviene revisar las condiciones de Coffman y las estrategias.';
+      if (percent >= 80) msg = 'Excelente dominio del tema.';
+      else if (percent >= 60) msg = 'Buen resultado. Falta reforzar algunos conceptos.';
+      Swal.fire({
+        title: `Resultado: ${score}/${questions.length}`,
+        html: `<p>Porcentaje: <strong>${percent}%</strong></p><p>${msg}</p>`,
+        confirmButtonText: 'Reiniciar quiz',
+        confirmButtonColor: '#8b5cf6',
+        background: '#fff7fb'
+      }).then(restartQuiz);
+    }
+
+    function restartQuiz() {
+      current = 0;
+      score = 0;
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>

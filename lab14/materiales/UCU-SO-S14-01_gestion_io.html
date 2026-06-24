@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de I/O en Sistemas Operativos</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fff8f0;
+      --card: #ffffff;
+      --pastel-blue: #d8ecff;
+      --pastel-green: #dff7e8;
+      --pastel-pink: #ffe0ec;
+      --pastel-yellow: #fff3c4;
+      --pastel-purple: #eadfff;
+      --ink: #263238;
+      --muted: #607d8b;
+      --accent: #7c6ee6;
+      --accent-2: #ff8fb1;
+      --border: rgba(38, 50, 56, 0.10);
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg), #f3fbff 45%, #fff5fb);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .navbar {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.84) !important;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      padding: 5rem 0 3rem;
+    }
+
+    .hero-card, .soft-card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: 0 18px 45px rgba(124, 110, 230, 0.12);
+    }
+
+    .section-title {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .badge-soft {
+      border-radius: 999px;
+      padding: .55rem .85rem;
+      background: var(--pastel-purple);
+      color: #4a3aa8;
+      font-weight: 700;
+    }
+
+    .icon-bubble {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .bubble-blue { background: var(--pastel-blue); color: #2c75b8; }
+    .bubble-green { background: var(--pastel-green); color: #31835a; }
+    .bubble-pink { background: var(--pastel-pink); color: #c25178; }
+    .bubble-yellow { background: var(--pastel-yellow); color: #9a7614; }
+    .bubble-purple { background: var(--pastel-purple); color: #6956c7; }
+
+    .slide-section {
+      padding: 5.5rem 0;
+    }
+
+    .soft-card {
+      padding: 1.5rem;
+      height: 100%;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .soft-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 50px rgba(38, 50, 56, 0.12);
+    }
+
+    .step-number {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;
+      margin-right: .6rem;
+    }
+
+    .pastel-strip {
+      background: linear-gradient(90deg, var(--pastel-blue), var(--pastel-pink), var(--pastel-yellow));
+      border-radius: 22px;
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+    }
+
+    pre {
+      background: #263238;
+      color: #edf7fa;
+      border-radius: 18px;
+      padding: 1.2rem;
+      overflow-x: auto;
+      font-size: .88rem;
+    }
+
+    code {
+      color: inherit;
+    }
+
+    .quiz-option {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: .85rem 1rem;
+      margin-bottom: .7rem;
+      background: white;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .quiz-option:hover {
+      background: var(--pastel-blue);
+      transform: translateX(4px);
+    }
+
+    .quiz-option.selected {
+      background: var(--pastel-purple);
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .footer {
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+    }
+
+    .table-soft th {
+      background: var(--pastel-purple) !important;
+    }
+
+    .nav-link {
+      font-weight: 600;
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+
+    .concept-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.82);
+      border-radius: 999px;
+      padding: .65rem .95rem;
+      margin: .28rem;
+      font-weight: 700;
+      color: var(--ink);
+      box-shadow: 0 8px 18px rgba(38, 50, 56, .08);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .concept-chip:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(38, 50, 56, .13);
+    }
+
+    .concept-mini {
+      border: 0;
+      background: var(--pastel-purple);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: .25rem .55rem;
+      font-size: .8rem;
+      font-weight: 700;
+      margin-left: .35rem;
+      cursor: pointer;
+    }
+
+    .definition-box {
+      background: linear-gradient(135deg, #ffffff, #f7f3ff);
+      border-left: 6px solid var(--accent);
+      border-radius: 18px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#inicio"><i class="fa-solid fa-microchip me-2 text-primary"></i>Gestión de I/O</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#concepto">Concepto</a></li>
+        <li class="nav-item"><a class="nav-link" href="#componentes">Componentes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#glosario">Definiciones</a></li>
+        <li class="nav-item"><a class="nav-link" href="#analogias">Analogías</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ejercicio">Ejercicio C++</a></li>
+        <li class="nav-item"><a class="nav-link" href="#quiz">Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header id="inicio" class="hero">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <span class="badge-soft animate__animated animate__fadeInDown"><i class="fa-solid fa-computer me-2"></i>Sistemas Operativos</span>
+        <h1 class="display-4 fw-bold mt-4 animate__animated animate__fadeInLeft">Administración de comunicaciones del SO</h1>
+        <h2 class="h3 mt-3 text-secondary animate__animated animate__fadeInLeft animate__delay-1s">Gestión de Entrada/Salida, dispositivos, drivers, buffers e interrupciones</h2>
+        <p class="lead mt-4 animate__animated animate__fadeInUp animate__delay-1s">
+          Una guía interactiva para comprender cómo el sistema operativo coordina la comunicación entre los procesos y los dispositivos de hardware.
+        </p>
+        <div class="d-flex gap-3 flex-wrap mt-4">
+          <a href="#concepto" class="btn btn-primary btn-lg rounded-pill"><i class="fa-solid fa-play me-2"></i>Comenzar</a>
+          <button class="btn btn-outline-primary btn-lg rounded-pill" onclick="mostrarObjetivos()"><i class="fa-solid fa-bullseye me-2"></i>Objetivos</button>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="hero-card p-4 animate__animated animate__zoomIn">
+          <div class="icon-bubble bubble-purple"><i class="fa-solid fa-diagram-project"></i></div>
+          <h3>Idea central</h3>
+          <p>Los dispositivos son distintos, lentos o rápidos, síncronos o asíncronos. El SO ofrece una capa común para que los programas no tengan que conocer cada detalle del hardware.</p>
+          <div class="pastel-strip mt-3">
+            <strong>Proceso → llamada al sistema → kernel → driver → controlador → dispositivo</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="concepto" class="slide-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">1</span>
+      <h2 class="section-title display-6 mt-3">¿Qué es la gestión de I/O?</h2>
+      <p class="lead text-secondary">I/O significa Input/Output: entrada y salida de datos entre la computadora y sus dispositivos.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-blue"><i class="fa-solid fa-keyboard"></i></div>
+          <h4>Entrada</h4>
+          <p>Datos que ingresan al sistema desde teclado, mouse, sensores, red, cámara, disco u otros dispositivos.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-pink"><i class="fa-solid fa-display"></i></div>
+          <h4>Salida</h4>
+          <p>Datos que el sistema envía hacia pantalla, impresora, parlantes, archivos, red u otros dispositivos.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-green"><i class="fa-solid fa-gears"></i></div>
+          <h4>Administración</h4>
+          <p>El SO organiza permisos, prioridades, buffers, interrupciones, colas de espera y acceso seguro al hardware.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pastel-strip mt-5">
+      <h5><i class="fa-solid fa-lightbulb me-2"></i>Mensaje clave</h5>
+      <p class="mb-0">La gestión de I/O evita que cada programa tenga que saber cómo funciona físicamente cada dispositivo. El SO actúa como intermediario.</p>
+    </div>
+  </div>
+</section>
+
+<section id="componentes" class="slide-section bg-white bg-opacity-50">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">2</span>
+      <h2 class="section-title display-6 mt-3">Componentes principales</h2>
+      <p class="lead text-secondary">La comunicación con dispositivos ocurre por capas.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-layer-group me-2 text-primary"></i>Capas de comunicación</h4>
+          <table class="table table-bordered table-soft mt-3">
+            <thead>
+              <tr><th>Elemento</th><th>Función</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Proceso <button class="concept-mini" onclick="mostrarDefinicion('proceso')">?</button></td><td>Solicita leer, escribir o comunicarse.</td></tr>
+              <tr><td>Llamada al sistema <button class="concept-mini" onclick="mostrarDefinicion('llamada')">?</button></td><td>Entrada controlada al kernel.</td></tr>
+              <tr><td>Kernel <button class="concept-mini" onclick="mostrarDefinicion('kernel')">?</button></td><td>Coordina recursos, permisos y planificación.</td></tr>
+              <tr><td>Driver <button class="concept-mini" onclick="mostrarDefinicion('driver')">?</button></td><td>Traduce órdenes generales a órdenes específicas del dispositivo.</td></tr>
+              <tr><td>Controlador <button class="concept-mini" onclick="mostrarDefinicion('controlador')">?</button></td><td>Hardware que maneja directamente el dispositivo.</td></tr>
+              <tr><td>Dispositivo <button class="concept-mini" onclick="mostrarDefinicion('dispositivo')">?</button></td><td>Elemento físico: disco, teclado, impresora, red, etc.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-route me-2 text-primary"></i>Flujo típico de una operación</h4>
+          <ol class="mt-3">
+            <li>Un programa solicita una operación de entrada/salida.</li>
+            <li>El SO valida la solicitud mediante una llamada al sistema.</li>
+            <li>El kernel consulta el driver correspondiente.</li>
+            <li>El driver se comunica con el controlador del dispositivo.</li>
+            <li>El dispositivo realiza la operación.</li>
+            <li>El SO informa el resultado al proceso.</li>
+          </ol>
+          <button class="btn btn-outline-primary rounded-pill mt-2" onclick="mostrarFlujo()"><i class="fa-solid fa-eye me-2"></i>Ver resumen interactivo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="glosario" class="slide-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">3</span>
+      <h2 class="section-title display-6 mt-3">Definiciones interactivas</h2>
+      <p class="lead text-secondary">Presiona cada concepto para ver su definición, una analogía y su relación con la gestión de I/O.</p>
+    </div>
+
+    <div class="soft-card text-center animate__animated animate__fadeInUp">
+      <button class="concept-chip" onclick="mostrarDefinicion('kernel')"><i class="fa-solid fa-shield-halved text-primary"></i>Kernel</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('llamada')"><i class="fa-solid fa-door-open text-primary"></i>Llamada al sistema</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('driver')"><i class="fa-solid fa-screwdriver-wrench text-primary"></i>Driver</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('controlador')"><i class="fa-solid fa-microchip text-primary"></i>Controlador</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('interrupcion')"><i class="fa-solid fa-bell text-primary"></i>Interrupción</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('dma')"><i class="fa-solid fa-memory text-primary"></i>DMA</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('buffering')"><i class="fa-solid fa-box-archive text-primary"></i>Buffering</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('spooling')"><i class="fa-solid fa-print text-primary"></i>Spooling</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('bloqueante')"><i class="fa-solid fa-hourglass-half text-primary"></i>I/O bloqueante</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('asincrona')"><i class="fa-solid fa-arrows-rotate text-primary"></i>I/O asíncrona</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('cola')"><i class="fa-solid fa-list-ol text-primary"></i>Cola de I/O</button>
+      <button class="concept-chip" onclick="mostrarDefinicion('proteccion')"><i class="fa-solid fa-lock text-primary"></i>Protección</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">4</span>
+      <h2 class="section-title display-6 mt-3">Técnicas usadas por el SO</h2>
+      <p class="lead text-secondary">El SO necesita resolver diferencias de velocidad, disponibilidad y acceso concurrente.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-blue"><i class="fa-solid fa-box-archive"></i></div>
+          <h4>Buffering <button class="concept-mini" onclick="mostrarDefinicion('buffering')">?</button></h4>
+          <p>Usa una zona temporal de memoria para guardar datos mientras se transfieren entre proceso y dispositivo.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-green"><i class="fa-solid fa-print"></i></div>
+          <h4>Spooling <button class="concept-mini" onclick="mostrarDefinicion('spooling')">?</button></h4>
+          <p>Coloca trabajos en una cola para que un dispositivo lento los procese de a uno, como una impresora.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-yellow"><i class="fa-solid fa-bell"></i></div>
+          <h4>Interrupciones <button class="concept-mini" onclick="mostrarDefinicion('interrupcion')">?</button></h4>
+          <p>El dispositivo avisa al CPU cuando necesita atención o cuando terminó una operación.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-pink"><i class="fa-solid fa-memory"></i></div>
+          <h4>DMA <button class="concept-mini" onclick="mostrarDefinicion('dma')">?</button></h4>
+          <p>Permite transferir datos entre memoria y dispositivo sin que la CPU copie byte por byte.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="analogias" class="slide-section bg-white bg-opacity-50">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">5</span>
+      <h2 class="section-title display-6 mt-3">Analogías con la vida real</h2>
+      <p class="lead text-secondary">Para entender I/O, pensemos en situaciones cotidianas.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-purple"><i class="fa-solid fa-building-user"></i></div>
+          <h4>El SO como recepcionista</h4>
+          <p>En una empresa, los empleados no entran directamente a cada oficina técnica. La recepción recibe pedidos, valida permisos y deriva al área correcta.</p>
+          <p><strong>Equivalencia:</strong> programa → SO → driver → dispositivo.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-green"><i class="fa-solid fa-utensils"></i></div>
+          <h4>Buffer como bandeja de cocina</h4>
+          <p>Un mozo deja platos en una bandeja antes de llevarlos a la mesa. La bandeja permite ordenar el flujo y compensar diferencias de velocidad.</p>
+          <p><strong>Equivalencia:</strong> buffer → memoria temporal de intercambio.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-yellow"><i class="fa-solid fa-ticket"></i></div>
+          <h4>Spooling como cola de atención</h4>
+          <p>En una farmacia, los clientes toman número. Aunque lleguen muchos pedidos, se atienden ordenadamente de a uno.</p>
+          <p><strong>Equivalencia:</strong> cola de impresión o cola de trabajos de I/O.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <div class="icon-bubble bubble-pink"><i class="fa-solid fa-door-open"></i></div>
+          <h4>Interrupción como timbre</h4>
+          <p>No hace falta mirar la puerta todo el tiempo. Cuando alguien llega, toca timbre y se atiende el evento.</p>
+          <p><strong>Equivalencia:</strong> interrupción → aviso del dispositivo al CPU.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">6</span>
+      <h2 class="section-title display-6 mt-3">Problemas que debe resolver el SO</h2>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-gauge-high me-2 text-primary"></i>Diferencia de velocidades</h4>
+          <p>La CPU es mucho más rápida que muchos dispositivos. Por eso se usan buffers, interrupciones y colas.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-users-gear me-2 text-primary"></i>Acceso concurrente</h4>
+          <p>Varios procesos pueden querer usar el mismo dispositivo. El SO debe ordenar, bloquear o compartir el acceso.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-shield-halved me-2 text-primary"></i>Seguridad y permisos</h4>
+          <p>No todos los procesos deben poder acceder libremente a discos, cámaras, red o impresoras.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ejercicio" class="slide-section bg-white bg-opacity-50">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">7</span>
+      <h2 class="section-title display-6 mt-3">Ejercicio práctico en C++</h2>
+      <p class="lead text-secondary">Simulador de cola de impresión con gestión de I/O.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-clipboard-list me-2 text-primary"></i>Consigna</h4>
+          <p>Desarrollar un programa en C++ que simule una cola de impresión administrada por el sistema operativo.</p>
+          <p>El sistema deberá permitir:</p>
+          <ul>
+            <li>Agregar trabajos de impresión.</li>
+            <li>Listar trabajos pendientes.</li>
+            <li>Procesar el siguiente trabajo.</li>
+            <li>Cancelar un trabajo por identificador.</li>
+            <li>Mostrar estadísticas de la cola.</li>
+            <li>Salir del sistema.</li>
+          </ul>
+          <div class="pastel-strip mt-3">
+            <strong>Relación con I/O:</strong> la impresora es un dispositivo lento, por eso el SO organiza los trabajos mediante una cola de spooling.
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="soft-card">
+          <h4><i class="fa-solid fa-list-check me-2 text-primary"></i>Requisitos sugeridos</h4>
+          <ol>
+            <li>Crear una estructura <strong>TrabajoImpresion</strong> con id, nombreArchivo y cantidadPaginas.</li>
+            <li>Usar una cola o vector para almacenar trabajos pendientes.</li>
+            <li>Validar que la cantidad de páginas sea mayor a cero.</li>
+            <li>Procesar los trabajos en orden de llegada.</li>
+            <li>Informar cuando la cola esté vacía.</li>
+            <li>Mostrar cantidad de trabajos pendientes y total de páginas en espera.</li>
+          </ol>
+          <button class="btn btn-outline-primary rounded-pill" onclick="mostrarPistasEjercicio()"><i class="fa-solid fa-lightbulb me-2"></i>Ver pistas</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="soft-card mt-4">
+      <h4><i class="fa-solid fa-code me-2 text-primary"></i>Código base orientativo</h4>
+      <p class="small-muted">El siguiente código no resuelve todo el ejercicio, pero muestra una estructura similar a la que se puede usar.</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct TrabajoImpresion {
+    int id;
+    string nombreArchivo;
+    int paginas;
+};
+
+void listarTrabajos(const vector&lt;TrabajoImpresion&gt;& cola) {
+    if (cola.empty()) {
+        cout &lt;&lt; "No hay trabajos pendientes.\n";
+        return;
+    }
+
+    cout &lt;&lt; "Trabajos pendientes:\n";
+    for (const auto& trabajo : cola) {
+        cout &lt;&lt; "ID: " &lt;&lt; trabajo.id
+             &lt;&lt; " | Archivo: " &lt;&lt; trabajo.nombreArchivo
+             &lt;&lt; " | Paginas: " &lt;&lt; trabajo.paginas &lt;&lt; "\n";
+    }
+}
+
+void procesarSiguiente(vector&lt;TrabajoImpresion&gt;& cola) {
+    if (cola.empty()) {
+        cout &lt;&lt; "La cola de impresion esta vacia.\n";
+        return;
+    }
+
+    TrabajoImpresion trabajo = cola.front();
+    cola.erase(cola.begin());
+
+    cout &lt;&lt; "Procesando impresion de: "
+         &lt;&lt; trabajo.nombreArchivo
+         &lt;&lt; " (" &lt;&lt; trabajo.paginas &lt;&lt; " paginas)\n";
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="slide-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">8</span>
+      <h2 class="section-title display-6 mt-3">Guía de resolución del ejercicio</h2>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="soft-card">
+          <h4><span class="step-number">1</span>Modelar el trabajo</h4>
+          <p>Definir qué datos necesita cada trabajo: identificador, nombre del archivo, páginas y eventualmente prioridad.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <h4><span class="step-number">2</span>Elegir estructura</h4>
+          <p>Usar <strong>queue</strong> si solo se procesa FIFO, o <strong>vector</strong> si se desea cancelar trabajos por id.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <h4><span class="step-number">3</span>Crear menú</h4>
+          <p>Implementar un ciclo que se repita hasta seleccionar Salir.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <h4><span class="step-number">4</span>Implementar operaciones</h4>
+          <p>Agregar, listar, procesar, cancelar y mostrar estadísticas.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <h4><span class="step-number">5</span>Validar entradas</h4>
+          <p>Controlar páginas negativas, ids inexistentes, nombres vacíos y cola vacía.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="soft-card">
+          <h4><span class="step-number">6</span>Relacionar con SO</h4>
+          <p>Explicar en un comentario final cómo el programa representa spooling, cola de I/O y dispositivo lento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz" class="slide-section bg-white bg-opacity-50">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge-soft">9</span>
+      <h2 class="section-title display-6 mt-3">Quiz final</h2>
+      <p class="lead text-secondary">10 preguntas para repasar gestión de I/O.</p>
+    </div>
+
+    <div class="soft-card mx-auto" style="max-width: 900px;">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h4 class="mb-0" id="quizPreguntaTitulo">Pregunta 1</h4>
+        <span class="badge-soft" id="quizProgreso">1 / 10</span>
+      </div>
+      <p class="fs-5" id="quizPregunta"></p>
+      <div id="quizOpciones"></div>
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn btn-outline-secondary rounded-pill" onclick="reiniciarQuiz()"><i class="fa-solid fa-rotate-left me-2"></i>Reiniciar</button>
+        <button class="btn btn-primary rounded-pill" onclick="siguientePregunta()">Siguiente <i class="fa-solid fa-arrow-right ms-2"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer text-center">
+  <div class="container">
+    <p class="mb-1"><strong>Administración de comunicaciones del Sistema Operativo</strong></p>
+    <p class="mb-0">Gestión de I/O · Sistemas Operativos · Material didáctico interactivo</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+  const definiciones = {
+    kernel: {
+      titulo: 'Kernel', icono: 'fa-shield-halved',
+      definicion: 'Es el núcleo del sistema operativo. Administra CPU, memoria, procesos, archivos, permisos y dispositivos.',
+      analogia: 'Como la dirección de una institución: no realiza cada tarea manualmente, pero coordina quién puede hacer qué y cuándo.',
+      io: 'En I/O decide si una solicitud es válida, qué driver usar, cómo ordenar el acceso y cómo devolver el resultado al proceso.'
+    },
+    llamada: {
+      titulo: 'Llamada al sistema', icono: 'fa-door-open',
+      definicion: 'Es el mecanismo controlado mediante el cual un programa solicita un servicio al sistema operativo.',
+      analogia: 'Como completar un formulario en una ventanilla: el usuario no entra directo a la oficina interna, hace un pedido formal.',
+      io: 'Leer un archivo, escribir en disco, imprimir o enviar datos por red suelen iniciar mediante llamadas al sistema.'
+    },
+    driver: {
+      titulo: 'Driver', icono: 'fa-screwdriver-wrench',
+      definicion: 'Es el software especializado que permite al sistema operativo comunicarse con un dispositivo concreto.',
+      analogia: 'Como un traductor técnico: convierte una orden general en instrucciones que una máquina específica entiende.',
+      io: 'El kernel no necesita conocer cada modelo de impresora, disco o tarjeta de red; delega los detalles al driver.'
+    },
+    controlador: {
+      titulo: 'Controlador de dispositivo', icono: 'fa-microchip',
+      definicion: 'Es el componente de hardware o firmware que controla físicamente un dispositivo.',
+      analogia: 'Como el tablero electrónico de un ascensor: recibe órdenes y acciona motores, sensores y puertas.',
+      io: 'Recibe instrucciones del driver, maneja registros del dispositivo y puede avisar al CPU mediante interrupciones.'
+    },
+    dispositivo: {
+      titulo: 'Dispositivo de I/O', icono: 'fa-keyboard',
+      definicion: 'Es el hardware que permite entrada, salida o ambas: teclado, pantalla, disco, impresora, red, cámara, sensores.',
+      analogia: 'Como distintas herramientas de un taller: cada una cumple una función y tiene tiempos de operación distintos.',
+      io: 'El SO unifica su uso para que los programas puedan trabajar con ellos sin conocer todos sus detalles físicos.'
+    },
+    proceso: {
+      titulo: 'Proceso', icono: 'fa-window-restore',
+      definicion: 'Es un programa en ejecución, con su memoria, estado y recursos asociados.',
+      analogia: 'Como una persona haciendo un trámite: necesita solicitar servicios y esperar respuestas.',
+      io: 'Cuando necesita leer, escribir, imprimir o comunicarse, no accede directo al hardware: solicita servicios al SO.'
+    },
+    interrupcion: {
+      titulo: 'Interrupción', icono: 'fa-bell',
+      definicion: 'Es una señal que detiene temporalmente el flujo normal de ejecución para que el CPU atienda un evento importante.',
+      analogia: 'Como un timbre: no miramos la puerta todo el tiempo; el timbre avisa cuando alguien llegó.',
+      io: 'Permite que un dispositivo avise que terminó una operación o que necesita atención, evitando que la CPU pregunte constantemente.'
+    },
+    dma: {
+      titulo: 'DMA', icono: 'fa-memory',
+      definicion: 'Direct Memory Access permite transferir datos entre un dispositivo y la memoria principal sin que la CPU copie cada byte.',
+      analogia: 'Como autorizar a un repartidor a dejar cajas directamente en el depósito, sin que el encargado cargue una por una.',
+      io: 'Mejora el rendimiento en operaciones grandes, por ejemplo lectura de disco, red o audio/video.'
+    },
+    buffering: {
+      titulo: 'Buffering', icono: 'fa-box-archive',
+      definicion: 'Consiste en usar una zona temporal de memoria para almacenar datos mientras se transfieren entre dos partes con velocidades distintas.',
+      analogia: 'Como una bandeja entre cocina y mesa: permite acumular y ordenar platos antes de entregarlos.',
+      io: 'Ayuda a compensar la diferencia de velocidad entre CPU, memoria y dispositivos.'
+    },
+    spooling: {
+      titulo: 'Spooling', icono: 'fa-print',
+      definicion: 'Es una técnica que coloca trabajos en una cola para que un dispositivo los procese ordenadamente.',
+      analogia: 'Como sacar número en una oficina: todos esperan su turno y son atendidos de a uno.',
+      io: 'Es típico en impresoras: varios procesos mandan trabajos, pero la impresora los procesa secuencialmente.'
+    },
+    bloqueante: {
+      titulo: 'I/O bloqueante', icono: 'fa-hourglass-half',
+      definicion: 'Una operación de I/O bloqueante hace que el proceso espere hasta que la operación termine.',
+      analogia: 'Como quedarse en la fila hasta ser atendido, sin poder hacer otra cosa mientras tanto.',
+      io: 'Es simple de programar, pero puede desperdiciar tiempo si el dispositivo es lento.'
+    },
+    asincrona: {
+      titulo: 'I/O asíncrona', icono: 'fa-arrows-rotate',
+      definicion: 'Permite iniciar una operación y continuar ejecutando otras tareas mientras se espera el resultado.',
+      analogia: 'Como dejar ropa en una lavandería y volver luego cuando esté pronta.',
+      io: 'Se combina naturalmente con interrupciones, callbacks, eventos o mecanismos de notificación.'
+    },
+    cola: {
+      titulo: 'Cola de I/O', icono: 'fa-list-ol',
+      definicion: 'Es una estructura donde el sistema operativo ordena solicitudes pendientes hacia un dispositivo.',
+      analogia: 'Como una fila de atención en una caja o farmacia.',
+      io: 'Ayuda a manejar concurrencia, prioridades y dispositivos que solo pueden atender una operación a la vez.'
+    },
+    proteccion: {
+      titulo: 'Protección y permisos', icono: 'fa-lock',
+      definicion: 'Conjunto de mecanismos que impiden accesos no autorizados a dispositivos y datos.',
+      analogia: 'Como una credencial de acceso: no todas las personas pueden entrar a todas las áreas.',
+      io: 'Evita que cualquier programa acceda libremente a cámara, disco, red o memoria de dispositivos.'
+    }
+  };
+
+  function mostrarDefinicion(clave) {
+    const d = definiciones[clave];
+    if (!d) return;
+    Swal.fire({
+      title: `<i class="fa-solid ${d.icono} me-2"></i>${d.titulo}`,
+      html: `
+        <div class="text-start">
+          <div class="definition-box"><strong>Definición:</strong><br>${d.definicion}</div>
+          <div class="definition-box"><strong>Analogía:</strong><br>${d.analogia}</div>
+          <div class="definition-box"><strong>Relación con I/O:</strong><br>${d.io}</div>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#7c6ee6',
+      width: 760
+    });
+  }
+
+  function mostrarObjetivos() {
+    Swal.fire({
+      title: 'Objetivos de aprendizaje',
+      html: `
+        <div class="text-start">
+          <p><i class="fa-solid fa-check text-success me-2"></i>Comprender qué es la gestión de I/O.</p>
+          <p><i class="fa-solid fa-check text-success me-2"></i>Identificar drivers, buffers, interrupciones, DMA y spooling.</p>
+          <p><i class="fa-solid fa-check text-success me-2"></i>Relacionar conceptos del SO con analogías cotidianas.</p>
+          <p><i class="fa-solid fa-check text-success me-2"></i>Aplicar el tema en un ejercicio práctico en C++.</p>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Comenzar',
+      confirmButtonColor: '#7c6ee6'
+    });
+  }
+
+  function mostrarFlujo() {
+    Swal.fire({
+      title: 'Flujo de una operación de I/O',
+      html: `
+        <div class="text-start">
+          <p><strong>1.</strong> El proceso pide leer o escribir.</p>
+          <p><strong>2.</strong> El kernel recibe la llamada al sistema.</p>
+          <p><strong>3.</strong> El driver traduce la solicitud.</p>
+          <p><strong>4.</strong> El controlador opera el dispositivo.</p>
+          <p><strong>5.</strong> El resultado vuelve al proceso.</p>
+        </div>
+      `,
+      icon: 'success',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#7c6ee6'
+    });
+  }
+
+  function mostrarPistasEjercicio() {
+    Swal.fire({
+      title: 'Pistas para resolver el ejercicio',
+      html: `
+        <div class="text-start">
+          <p><i class="fa-solid fa-lightbulb text-warning me-2"></i>Usa un contador incremental para generar ids.</p>
+          <p><i class="fa-solid fa-lightbulb text-warning me-2"></i>Si usas vector, puedes recorrerlo para cancelar por id.</p>
+          <p><i class="fa-solid fa-lightbulb text-warning me-2"></i>Para procesar FIFO, toma siempre el primer elemento.</p>
+          <p><i class="fa-solid fa-lightbulb text-warning me-2"></i>Relaciona cada operación con una acción del sistema operativo.</p>
+        </div>
+      `,
+      icon: 'question',
+      confirmButtonText: 'Aplicar pistas',
+      confirmButtonColor: '#7c6ee6'
+    });
+  }
+
+  const preguntas = [
+    {
+      texto: '¿Qué significa I/O en el contexto de sistemas operativos?',
+      opciones: ['Input/Output', 'Internal Operation', 'Integrated Object', 'Instruction Order'],
+      correcta: 0
+    },
+    {
+      texto: '¿Cuál es la función principal de un driver?',
+      opciones: ['Ejecutar programas de usuario', 'Traducir órdenes del SO a instrucciones específicas del dispositivo', 'Aumentar la memoria RAM', 'Eliminar procesos bloqueados'],
+      correcta: 1
+    },
+    {
+      texto: '¿Qué técnica usa una zona temporal de memoria para compensar diferencias de velocidad?',
+      opciones: ['Spooling', 'Buffering', 'Fragmentación', 'Multiprogramación'],
+      correcta: 1
+    },
+    {
+      texto: '¿Qué es una interrupción?',
+      opciones: ['Un error irreversible del sistema', 'Un aviso del dispositivo para solicitar atención del CPU', 'Un archivo temporal', 'Una partición del disco'],
+      correcta: 1
+    },
+    {
+      texto: '¿Qué dispositivo suele usarse como ejemplo clásico de spooling?',
+      opciones: ['CPU', 'Memoria caché', 'Impresora', 'Registro'],
+      correcta: 2
+    },
+    {
+      texto: '¿Qué permite DMA?',
+      opciones: ['Transferir datos entre memoria y dispositivo sin intervención constante de la CPU', 'Eliminar drivers', 'Convertir RAM en disco', 'Ejecutar procesos sin kernel'],
+      correcta: 0
+    },
+    {
+      texto: '¿Por qué el SO administra el acceso a los dispositivos?',
+      opciones: ['Porque todos los dispositivos tienen la misma velocidad', 'Para coordinar, proteger y ordenar el uso del hardware', 'Para evitar el uso de memoria', 'Para reemplazar al compilador'],
+      correcta: 1
+    },
+    {
+      texto: 'En una cola de impresión, ¿qué representa el orden FIFO?',
+      opciones: ['Primero en llegar, primero en ser atendido', 'Último en llegar, primero en salir', 'Mayor tamaño primero', 'Menor tamaño primero'],
+      correcta: 0
+    },
+    {
+      texto: '¿Cuál de estos elementos pertenece al hardware de comunicación con un dispositivo?',
+      opciones: ['Controlador de dispositivo', 'Variable local', 'Clase abstracta', 'Archivo fuente'],
+      correcta: 0
+    },
+    {
+      texto: '¿Qué problema aparece cuando varios procesos quieren usar el mismo dispositivo?',
+      opciones: ['Acceso concurrente', 'Compilación cruzada', 'Normalización', 'Polimorfismo'],
+      correcta: 0
+    }
+  ];
+
+  let preguntaActual = 0;
+  let respuestas = new Array(preguntas.length).fill(null);
+
+  function cargarPregunta() {
+    const p = preguntas[preguntaActual];
+    document.getElementById('quizPreguntaTitulo').textContent = `Pregunta ${preguntaActual + 1}`;
+    document.getElementById('quizProgreso').textContent = `${preguntaActual + 1} / ${preguntas.length}`;
+    document.getElementById('quizPregunta').textContent = p.texto;
+
+    const contenedor = document.getElementById('quizOpciones');
+    contenedor.innerHTML = '';
+
+    p.opciones.forEach((opcion, index) => {
+      const div = document.createElement('div');
+      div.className = 'quiz-option' + (respuestas[preguntaActual] === index ? ' selected' : '');
+      div.innerHTML = `<i class="fa-regular fa-circle me-2"></i>${opcion}`;
+      div.onclick = () => seleccionarOpcion(index);
+      contenedor.appendChild(div);
+    });
+  }
+
+  function seleccionarOpcion(index) {
+    respuestas[preguntaActual] = index;
+    cargarPregunta();
+  }
+
+  function siguientePregunta() {
+    if (respuestas[preguntaActual] === null) {
+      Swal.fire({
+        title: 'Selecciona una respuesta',
+        text: 'Antes de continuar, elige una opción.',
+        icon: 'warning',
+        confirmButtonColor: '#7c6ee6'
+      });
+      return;
+    }
+
+    if (preguntaActual < preguntas.length - 1) {
+      preguntaActual++;
+      cargarPregunta();
+    } else {
+      finalizarQuiz();
+    }
+  }
+
+  function finalizarQuiz() {
+    let correctas = 0;
+    preguntas.forEach((p, i) => {
+      if (respuestas[i] === p.correcta) correctas++;
+    });
+
+    let mensaje = '';
+    if (correctas >= 8) {
+      mensaje = 'Excelente dominio del tema.';
+    } else if (correctas >= 6) {
+      mensaje = 'Buen resultado. Conviene repasar algunos conceptos.';
+    } else {
+      mensaje = 'Es recomendable volver a revisar la presentación.';
+    }
+
+    Swal.fire({
+      title: `Resultado: ${correctas}/10`,
+      text: mensaje,
+      icon: correctas >= 6 ? 'success' : 'info',
+      confirmButtonText: 'Reiniciar quiz',
+      confirmButtonColor: '#7c6ee6'
+    }).then(() => reiniciarQuiz());
+  }
+
+  function reiniciarQuiz() {
+    preguntaActual = 0;
+    respuestas = new Array(preguntas.length).fill(null);
+    cargarPregunta();
+  }
+
+  cargarPregunta();
+</script>
+</body>
+</html>

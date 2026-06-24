@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resumen Final - Sistemas Operativos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root{
+      --bg1:#fff7fb;
+      --bg2:#eef7ff;
+      --pastel-blue:#b8defa;
+      --pastel-pink:#ffd6e8;
+      --pastel-lilac:#d9ccff;
+      --pastel-green:#d8f6e7;
+      --pastel-yellow:#fff1b8;
+      --ink:#263445;
+      --soft:#637083;
+      --card:#ffffffcc;
+      --shadow:0 18px 50px rgba(76,91,115,.14);
+    }
+    *{scroll-behavior:smooth;}
+    body{
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 5% 10%, rgba(255,214,232,.65), transparent 28%),
+        radial-gradient(circle at 95% 5%, rgba(184,222,250,.7), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(216,246,231,.75), transparent 32%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .navbar{
+      backdrop-filter: blur(12px);
+      background:rgba(255,255,255,.78)!important;
+      box-shadow:0 4px 20px rgba(0,0,0,.04);
+    }
+    .brand-badge{
+      width:38px;height:38px;border-radius:14px;
+      display:inline-flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--pastel-lilac),var(--pastel-blue));
+      color:#28324a;
+      margin-right:.6rem;
+    }
+    .hero{
+      min-height:92vh;
+      display:flex;
+      align-items:center;
+      padding:6rem 0 4rem;
+    }
+    .glass{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.9);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+    .hero-title{
+      font-weight:900;
+      letter-spacing:-.04em;
+      line-height:1.02;
+    }
+    .gradient-text{
+      background:linear-gradient(90deg,#6c63ff,#2e9ad8,#47b881);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .pill{
+      border-radius:999px;
+      padding:.55rem .9rem;
+      background:rgba(255,255,255,.75);
+      border:1px solid rgba(255,255,255,.9);
+      display:inline-flex;gap:.45rem;align-items:center;
+      font-weight:600;color:var(--soft);
+    }
+    .section-pad{padding:5.5rem 0;}
+    .unit-card{
+      height:100%;
+      transition:.25s ease;
+      overflow:hidden;
+      position:relative;
+    }
+    .unit-card:hover{transform:translateY(-6px);box-shadow:0 24px 58px rgba(76,91,115,.22);}
+    .unit-icon{
+      width:66px;height:66px;border-radius:22px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.75rem;
+      margin-bottom:1rem;
+    }
+    .u1{background:linear-gradient(135deg,#d9ccff,#b8defa);}
+    .u2{background:linear-gradient(135deg,#ffd6e8,#fff1b8);}
+    .u3{background:linear-gradient(135deg,#d8f6e7,#b8defa);}
+    .u4{background:linear-gradient(135deg,#fff1b8,#ffd6e8);}
+    .u5{background:linear-gradient(135deg,#b8defa,#d8f6e7);}
+    .u6{background:linear-gradient(135deg,#d9ccff,#ffd6e8);}
+    .mini-title{text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:800;color:#6b7a90;}
+    .topic-list li{margin:.45rem 0;}
+    .concept-btn{border-radius:15px;font-weight:700;}
+    .timeline{position:relative;padding-left:1.5rem;}
+    .timeline:before{content:"";position:absolute;top:0;bottom:0;left:.45rem;width:3px;background:linear-gradient(var(--pastel-lilac),var(--pastel-blue),var(--pastel-green));border-radius:3px;}
+    .timeline-item{position:relative;margin-bottom:1.35rem;}
+    .timeline-item:before{content:"";position:absolute;left:-1.36rem;top:.28rem;width:16px;height:16px;background:white;border:4px solid #8bbcf0;border-radius:50%;}
+    .slide-panel{min-height:72vh;display:flex;align-items:center;}
+    .quiz-box{max-width:980px;margin:auto;}
+    .answer-btn{
+      text-align:left;border:1px solid rgba(99,112,131,.18);background:white;border-radius:18px;padding:1rem;
+      transition:.2s ease;width:100%;
+    }
+    .answer-btn:hover{transform:translateX(4px);background:#f8fbff;}
+    .progress{height:12px;border-radius:999px;background:#eaf0f8;}
+    .progress-bar{background:linear-gradient(90deg,#6c63ff,#2e9ad8,#47b881);}
+    .floating-home{position:fixed;right:18px;bottom:18px;z-index:1000;border-radius:999px;box-shadow:var(--shadow);}
+    .footer{padding:3rem 0;color:var(--soft);}
+    .swal2-popup{border-radius:28px!important;}
+    .swal2-html-container{text-align:left!important;}
+    .badge-unit{background:#ffffffb8;color:#556070;border:1px solid #fff;border-radius:999px;padding:.35rem .65rem;}
+    @media (max-width: 768px){.hero-title{font-size:2.45rem}.hero{padding-top:5rem}.slide-panel{min-height:auto}.section-pad{padding:3.5rem 0}}
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#inicio">
+        <span class="brand-badge"><i class="fa-solid fa-laptop-code"></i></span>
+        SO · Resumen Final
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#unidades">Unidades</a></li>
+          <li class="nav-item"><a class="nav-link" href="#mapa">Mapa</a></li>
+          <li class="nav-item"><a class="nav-link" href="#quiz">Quiz</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <a href="#inicio" class="btn btn-light floating-home"><i class="fa-solid fa-arrow-up"></i> Inicio</a>
+
+  <header id="inicio" class="hero">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="animate__animated animate__fadeInLeft">
+            <span class="pill mb-3"><i class="fa-solid fa-graduation-cap"></i> Resumen integrador</span>
+            <h1 class="hero-title display-2 mb-4">Sistemas Operativos <span class="gradient-text">en 6 unidades</span></h1>
+            <p class="lead text-secondary mb-4">Presentación interactiva para repasar virtualización, seguridad, interfaces, scripting, procesos, almacenamiento y comunicación de I/O.</p>
+            <a href="#unidades" class="btn btn-primary btn-lg rounded-pill px-4 me-2"><i class="fa-solid fa-play me-2"></i>Comenzar</a>
+            <button class="btn btn-outline-secondary btn-lg rounded-pill px-4" onclick="showHowToUse()"><i class="fa-solid fa-lightbulb me-2"></i>Cómo usarla</button>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="glass p-4 animate__animated animate__fadeInRight">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-route me-2"></i>Recorrido de estudio</h5>
+            <div class="timeline">
+              <div class="timeline-item"><strong>Instalar y comprender</strong><br><span class="text-secondary">Virtualización y arranque del S.O.</span></div>
+              <div class="timeline-item"><strong>Proteger</strong><br><span class="text-secondary">Acceso, usuarios, permisos y ciberseguridad.</span></div>
+              <div class="timeline-item"><strong>Operar</strong><br><span class="text-secondary">CLI, GUI, PowerShell y Bash.</span></div>
+              <div class="timeline-item"><strong>Administrar</strong><br><span class="text-secondary">Procesos, hilos, planificación y concurrencia.</span></div>
+              <div class="timeline-item"><strong>Guardar y comunicar</strong><br><span class="text-secondary">Memoria, archivos, I/O e interrupciones.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="unidades" class="section-pad">
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="mini-title">Contenido del curso</span>
+          <h2 class="display-5 fw-bold mt-2">Resumen por unidad</h2>
+          <p class="text-secondary">Cada tarjeta incluye una síntesis y botones para ver conceptos principales.</p>
+        </div>
+        <div class="row g-4" id="unitCards"></div>
+      </div>
+    </section>
+
+    <section id="mapa" class="section-pad">
+      <div class="container">
+        <div class="glass p-4 p-lg-5">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-5">
+              <span class="mini-title">Mapa mental</span>
+              <h2 class="fw-bold display-6 mt-2">Cómo se conectan las unidades</h2>
+              <p class="text-secondary">Un sistema operativo puede entenderse como un mediador: inicializa recursos, protege el acceso, recibe órdenes del usuario, ejecuta procesos, administra memoria/archivos y coordina dispositivos.</p>
+              <button class="btn btn-primary rounded-pill" onclick="showIntegration()"><i class="fa-solid fa-diagram-project me-2"></i>Ver ejemplo integrador</button>
+            </div>
+            <div class="col-lg-7">
+              <div class="row g-3">
+                <div class="col-md-6"><div class="p-3 rounded-4 bg-white h-100"><i class="fa-solid fa-server fa-2x mb-2 text-primary"></i><h5>Base técnica</h5><p class="small text-secondary mb-0">Virtualización, instalación, arranque y tipos de S.O.</p></div></div>
+                <div class="col-md-6"><div class="p-3 rounded-4 bg-white h-100"><i class="fa-solid fa-user-shield fa-2x mb-2 text-warning"></i><h5>Protección</h5><p class="small text-secondary mb-0">Identificación, autenticación, autorización, permisos y defensas.</p></div></div>
+                <div class="col-md-6"><div class="p-3 rounded-4 bg-white h-100"><i class="fa-solid fa-terminal fa-2x mb-2 text-success"></i><h5>Interacción</h5><p class="small text-secondary mb-0">CLI, GUI, NUI, comandos y scripting.</p></div></div>
+                <div class="col-md-6"><div class="p-3 rounded-4 bg-white h-100"><i class="fa-solid fa-microchip fa-2x mb-2 text-danger"></i><h5>Ejecución</h5><p class="small text-secondary mb-0">Procesos, hilos, planificación, sincronización y deadlocks.</p></div></div>
+                <div class="col-md-6"><div class="p-3 rounded-4 bg-white h-100"><i class="fa-solid fa-hard-drive fa-2x mb-2 text-info"></i><h5>Persistencia</h5><p class="small text-secondary mb-0">Memoria, swapping, fragmentación, discos y archivos.</p></div></div>
+                <div class="col-md-6"><div class="p-3 rounded-4 bg-white h-100"><i class="fa-solid fa-plug-circle-bolt fa-2x mb-2 text-secondary"></i><h5>Comunicación</h5><p class="small text-secondary mb-0">I/O, controladores, colas, temporizadores e interrupciones.</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="section-pad">
+      <div class="container">
+        <div class="text-center mb-4">
+          <span class="mini-title">Evaluación final</span>
+          <h2 class="display-5 fw-bold mt-2">Quiz de 30 preguntas</h2>
+          <p class="text-secondary">5 preguntas por unidad. Al finalizar se muestra el resultado y una recomendación.</p>
+        </div>
+        <div class="glass p-4 p-lg-5 quiz-box">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <span class="badge-unit" id="quizUnit">Unidad</span>
+            <span class="fw-bold" id="quizCounter">Pregunta 1/30</span>
+          </div>
+          <div class="progress mb-4"><div class="progress-bar" id="quizProgress" style="width:0%"></div></div>
+          <h4 class="fw-bold mb-4" id="questionText"></h4>
+          <div class="row g-3" id="answersBox"></div>
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <button class="btn btn-outline-secondary rounded-pill" onclick="restartQuiz()"><i class="fa-solid fa-rotate-left me-2"></i>Reiniciar</button>
+            <span class="text-secondary" id="scoreMini">Puntaje: 0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer text-center">
+    <div class="container">
+      <p class="mb-1 fw-semibold">Resumen Final · Sistemas Operativos</p>
+      <p class="small mb-0">Material interactivo basado en el temario proporcionado.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const units = [
+      {
+        n:1, icon:'fa-computer', cls:'u1', title:'Virtualización e instalación de un S.O.',
+        summary:'Introduce la virtualización como herramienta para ejecutar sistemas operativos dentro de máquinas virtuales, practicar instalaciones y comprender el proceso de arranque.',
+        topics:['Virtualización de sistemas operativos','Instalación y configuración de VirtualBox','Conceptos de hardware y software','Interacción hardware/software','Proceso de arranque y unidad booteable','Definiciones, tipos, evolución y servicios de S.O.'],
+        concepts:[
+          ['Virtualización','Permite crear una capa lógica donde un sistema operativo invitado se ejecuta sobre un equipo anfitrión, compartiendo recursos físicos como CPU, memoria, disco y red.'],
+          ['Máquina virtual','Entorno aislado que simula una computadora completa. Es ideal para laboratorios porque permite instalar, probar y revertir configuraciones sin afectar el equipo real.'],
+          ['Proceso de arranque','Secuencia inicial donde firmware, gestor de arranque, kernel y servicios preparan el sistema para que el usuario pueda operar.']
+        ]
+      },
+      {
+        n:2, icon:'fa-shield-halved', cls:'u2', title:'Seguridad, control de acceso y ciberseguridad',
+        summary:'Presenta mecanismos para proteger recursos del sistema: cuentas, permisos, grupos, autenticación, autorización, ataques, defensas y registros de eventos.',
+        topics:['Contexto actual de seguridad','Identificación, autenticación y autorización','Cuentas de usuario','Ataques y defensas','Visor de sucesos en Windows','Registros en Linux','Permisos y grupos'],
+        concepts:[
+          ['Identificación','El usuario declara quién es, por ejemplo mediante un nombre de usuario.'],
+          ['Autenticación','El sistema verifica esa identidad mediante contraseña, token, biometría u otro factor.'],
+          ['Autorización','El sistema decide qué puede hacer el usuario autenticado: leer, modificar, ejecutar o administrar recursos.'],
+          ['Registros','Los logs permiten auditar acciones, detectar fallas y reconstruir incidentes de seguridad.']
+        ]
+      },
+      {
+        n:3, icon:'fa-terminal', cls:'u3', title:'Interfaces de usuario y scripting',
+        summary:'Compara CLI, GUI y NUI, e introduce comandos y scripts en Windows y Linux mediante CMD, PowerShell y Bash.',
+        topics:['CLI, GUI y NUI','CMD, PowerShell y Bash','Navegación por carpetas','Manejo de archivos y directorios','Archivos .BAT','Cmdlets, variables y expresiones regulares','Condicionales, repetitivas, pipelines y redireccionamiento'],
+        concepts:[
+          ['CLI','Interfaz de línea de comandos. Permite operar el sistema con instrucciones textuales y es muy potente para automatizar.'],
+          ['GUI','Interfaz gráfica. Facilita el uso mediante ventanas, botones, menús e íconos.'],
+          ['Script','Archivo con comandos que automatizan tareas repetitivas, reducen errores manuales y permiten administrar sistemas.'],
+          ['Pipeline','Encadena comandos: la salida de uno se usa como entrada del siguiente. Es una idea central en Bash y PowerShell.']
+        ]
+      },
+      {
+        n:4, icon:'fa-gears', cls:'u4', title:'Procesos',
+        summary:'Explica cómo el sistema operativo ejecuta programas, administra procesos e hilos, planifica CPU y controla problemas de concurrencia.',
+        topics:['Infraestructura y evolución histórica','Procesos e hilos','Planificación de procesos','Concurrencia','Semáforos y monitores','Deadlocks','Monitoreo CLI y GUI','Administración desde lenguajes de programación'],
+        concepts:[
+          ['Proceso','Programa en ejecución con estado, memoria asignada, recursos y contexto propio.'],
+          ['Hilo','Unidad de ejecución más liviana dentro de un proceso. Varios hilos pueden compartir memoria del mismo proceso.'],
+          ['Planificación','Decisión del S.O. sobre qué proceso o hilo usa la CPU, cuándo y durante cuánto tiempo.'],
+          ['Deadlock','Bloqueo donde varios procesos esperan recursos retenidos entre sí y ninguno puede continuar.']
+        ]
+      },
+      {
+        n:5, icon:'fa-database', cls:'u5', title:'Almacenamiento de datos',
+        summary:'Integra memoria principal, áreas de memoria, direccionamiento, fragmentación, swapping, discos y sistemas de archivos.',
+        topics:['Áreas de memoria','Tipos y direccionamiento','Fragmentación y stack overflow','Swapping','HDD, SSD y estructuras de disco','Archivos y directorios','Organización lógica','Permisos de grupo y usuario'],
+        concepts:[
+          ['Memoria principal','Espacio rápido y temporal donde se cargan instrucciones y datos necesarios para ejecutar procesos.'],
+          ['Fragmentación','Aprovechamiento ineficiente de memoria o disco por espacios libres divididos o mal distribuidos.'],
+          ['Swapping','Movimiento temporal de procesos o páginas entre memoria principal y disco para liberar RAM.'],
+          ['Sistema de archivos','Forma en que el S.O. organiza, almacena, nombra, protege y recupera archivos y directorios.']
+        ]
+      },
+      {
+        n:6, icon:'fa-network-wired', cls:'u6', title:'Comunicación y gestión de I/O',
+        summary:'Describe cómo el sistema operativo coordina entrada/salida mediante controladores, colas, temporizadores, interrupciones y asignación de dispositivos.',
+        topics:['Gestión de entrada/salida','Controladores de dispositivos','Colas de I/O','Temporizadores','Interrupciones','Asignación de dispositivos','Acceso desde lenguajes de programación'],
+        concepts:[
+          ['Controlador de dispositivo','Software que permite al S.O. comunicarse con hardware específico, como teclado, disco, impresora o placa de red.'],
+          ['Cola de I/O','Estructura donde se ordenan solicitudes de entrada/salida antes de ser atendidas por un dispositivo.'],
+          ['Interrupción','Señal que avisa al procesador que un evento requiere atención, evitando que la CPU tenga que consultar permanentemente.'],
+          ['Temporizador','Mecanismo que permite controlar tiempos, generar eventos periódicos y apoyar la planificación.']
+        ]
+      }
+    ];
+
+    const unitCards = document.getElementById('unitCards');
+    units.forEach(u => {
+      const col = document.createElement('div');
+      col.className = 'col-lg-6';
+      col.innerHTML = `
+        <div class="glass unit-card p-4 animate__animated animate__fadeInUp">
+          <div class="unit-icon ${u.cls}"><i class="fa-solid ${u.icon}"></i></div>
+          <span class="mini-title">Unidad ${u.n}</span>
+          <h3 class="fw-bold mt-2">${u.title}</h3>
+          <p class="text-secondary">${u.summary}</p>
+          <ul class="topic-list text-secondary">${u.topics.map(t=>`<li>${t}</li>`).join('')}</ul>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <button class="btn btn-primary concept-btn" onclick="showConcepts(${u.n})"><i class="fa-solid fa-circle-info me-2"></i>Conceptos clave</button>
+            <button class="btn btn-outline-secondary concept-btn" onclick="showStudyTip(${u.n})"><i class="fa-solid fa-book-open-reader me-2"></i>Tip de estudio</button>
+          </div>
+        </div>`;
+      unitCards.appendChild(col);
+    });
+
+    function showHowToUse(){
+      Swal.fire({
+        title:'Cómo usar esta presentación',
+        icon:'info',
+        html:`<p>Recorré las unidades en orden para repasar la lógica completa del curso.</p>
+              <ol>
+                <li>Leé la síntesis de cada unidad.</li>
+                <li>Usá <strong>Conceptos clave</strong> para abrir definiciones rápidas.</li>
+                <li>Revisá el mapa integrador para conectar temas.</li>
+                <li>Finalizá con el quiz de 30 preguntas.</li>
+              </ol>`,
+        confirmButtonText:'Entendido'
+      });
+    }
+
+    function showConcepts(n){
+      const u = units.find(x=>x.n===n);
+      Swal.fire({
+        title:`Unidad ${u.n}: conceptos clave`,
+        html:u.concepts.map(c=>`<div class="mb-3"><h5 class="fw-bold mb-1"><i class="fa-solid fa-check-circle text-success me-2"></i>${c[0]}</h5><p class="mb-0 text-secondary">${c[1]}</p></div>`).join(''),
+        confirmButtonText:'Cerrar',
+        width:760
+      });
+    }
+
+    function showStudyTip(n){
+      const tips = {
+        1:'Practicá instalando una máquina virtual y explicá cada paso: recursos asignados, ISO, arranque, instalación y configuración inicial.',
+        2:'Construí una tabla con identificación, autenticación y autorización. Luego aplicala a un ejemplo: usuario que entra a un sistema y accede a una carpeta.',
+        3:'Compará un mismo procedimiento en GUI y CLI, por ejemplo crear carpetas, copiar archivos o listar procesos. Luego automatizalo con un script.',
+        4:'Dibujá el ciclo de vida de un proceso y agregá dónde aparecen hilos, planificación, sincronización y deadlocks.',
+        5:'Usá la analogía escritorio/archivo: la RAM es la mesa de trabajo, el disco es el archivador y el sistema de archivos es el catálogo.',
+        6:'Pensá en una impresora: los pedidos entran en una cola, el driver traduce, la interrupción avisa que terminó y el S.O. asigna el dispositivo.'
+      };
+      Swal.fire({title:`Tip para estudiar Unidad ${n}`, icon:'success', html:`<p>${tips[n]}</p>`, confirmButtonText:'Perfecto'});
+    }
+
+    function showIntegration(){
+      Swal.fire({
+        title:'Ejemplo integrador: abrir un archivo desde un editor',
+        html:`<p>Cuando un usuario abre un archivo:</p>
+          <ul>
+            <li><strong>Interfaz:</strong> usa GUI o CLI para pedir la acción.</li>
+            <li><strong>Seguridad:</strong> el S.O. verifica usuario y permisos.</li>
+            <li><strong>Procesos:</strong> el editor se ejecuta como proceso, con uno o más hilos.</li>
+            <li><strong>Memoria:</strong> el archivo se carga parcialmente en RAM.</li>
+            <li><strong>Sistema de archivos:</strong> localiza directorios, metadatos y bloques.</li>
+            <li><strong>I/O:</strong> el driver del disco atiende solicitudes mediante colas e interrupciones.</li>
+          </ul>`,
+        confirmButtonText:'Cerrar',
+        width:760
+      });
+    }
+
+    const questions = [
+      // Unidad 1
+      {u:1,q:'¿Cuál es la principal ventaja de usar una máquina virtual en laboratorio?',a:['Permite probar sistemas sin afectar el equipo anfitrión','Elimina la necesidad de memoria RAM','Reemplaza completamente al hardware físico','Impide instalar sistemas operativos'],c:0},
+      {u:1,q:'¿Qué componente se carga como núcleo del sistema operativo durante el arranque?',a:['Kernel','Papelera','Navegador','Editor de texto'],c:0},
+      {u:1,q:'VirtualBox se utiliza principalmente para:',a:['Crear y ejecutar máquinas virtuales','Editar imágenes ISO','Diseñar páginas web','Administrar exclusivamente impresoras'],c:0},
+      {u:1,q:'Un sistema operativo de tiempo real se caracteriza por:',a:['Responder dentro de plazos estrictos','Usar solamente interfaz gráfica','No ejecutar procesos','No administrar memoria'],c:0},
+      {u:1,q:'Una unidad booteable sirve para:',a:['Iniciar un equipo e instalar o reparar un sistema','Aumentar permanentemente la velocidad de CPU','Crear usuarios automáticamente','Eliminar todos los drivers'],c:0},
+      // Unidad 2
+      {u:2,q:'¿Qué significa autenticación?',a:['Verificar que un usuario es quien dice ser','Elegir un fondo de pantalla','Asignar una dirección IP','Crear un archivo temporal'],c:0},
+      {u:2,q:'La autorización responde principalmente a la pregunta:',a:['¿Qué puede hacer este usuario?','¿Cuál es el nombre del equipo?','¿Qué hora es?','¿Qué tipo de monitor usa?'],c:0},
+      {u:2,q:'Los grupos de usuarios se usan para:',a:['Administrar permisos de forma colectiva','Cambiar el idioma del teclado','Desinstalar el kernel','Evitar el uso de contraseñas'],c:0},
+      {u:2,q:'El Visor de sucesos de Windows permite:',a:['Consultar eventos y registros del sistema','Compilar scripts Bash','Crear particiones automáticamente','Ejecutar máquinas virtuales Linux'],c:0},
+      {u:2,q:'Una defensa básica de ciberseguridad es:',a:['Mantener actualizaciones y permisos adecuados','Compartir contraseñas por correo','Usar siempre usuario administrador','Desactivar todos los registros'],c:0},
+      // Unidad 3
+      {u:3,q:'¿Qué representa CLI?',a:['Interfaz de línea de comandos','Interfaz natural por gestos','Controlador lógico interno','Cliente local integrado'],c:0},
+      {u:3,q:'PowerShell trabaja con comandos conocidos como:',a:['Cmdlets','Sprites','Sectores','Bloques físicos'],c:0},
+      {u:3,q:'Un archivo .BAT se asocia principalmente con:',a:['Automatización de comandos en Windows','Diseño de bases de datos','Compresión de imágenes','Gestión de memoria virtual Linux'],c:0},
+      {u:3,q:'En Bash, el pipeline permite:',a:['Conectar la salida de un comando con la entrada de otro','Instalar una máquina virtual','Cambiar permisos sin comandos','Crear usuarios gráficos solamente'],c:0},
+      {u:3,q:'¿Cuál opción es un editor simple habitual en terminal Linux?',a:['nano','paint','calc','explorer'],c:0},
+      // Unidad 4
+      {u:4,q:'Un proceso es:',a:['Un programa en ejecución','Un archivo comprimido','Un permiso de usuario','Un tipo de monitor'],c:0},
+      {u:4,q:'Un hilo se diferencia de un proceso porque:',a:['Es una unidad de ejecución más liviana y puede compartir memoria del proceso','Siempre tiene disco propio','No usa CPU','Solo existe en Windows'],c:0},
+      {u:4,q:'La planificación de procesos decide:',a:['Qué proceso usa CPU y cuándo','Qué contraseña usar','Qué disco comprar','Qué monitor conectar'],c:0},
+      {u:4,q:'Los semáforos ayudan a:',a:['Sincronizar acceso a recursos compartidos','Dibujar ventanas','Formatear discos','Crear usuarios'],c:0},
+      {u:4,q:'Un deadlock ocurre cuando:',a:['Procesos quedan esperando recursos entre sí y ninguno avanza','Un proceso finaliza correctamente','Se copia un archivo','El usuario cierra sesión'],c:0},
+      // Unidad 5
+      {u:5,q:'La memoria principal se caracteriza por ser:',a:['Rápida y temporal','Más lenta que un DVD siempre','Solo de lectura para el usuario','Independiente de los procesos'],c:0},
+      {u:5,q:'Swapping implica:',a:['Mover información entre RAM y disco para gestionar memoria','Cambiar el mouse por teclado','Apagar los procesos siempre','Eliminar logs'],c:0},
+      {u:5,q:'La fragmentación se relaciona con:',a:['Uso ineficiente o dividido del espacio disponible','Autenticación de usuario','Interrupciones de teclado','Comandos PowerShell'],c:0},
+      {u:5,q:'El sistema de archivos organiza:',a:['Archivos, directorios, permisos y metadatos','Solo procesos de CPU','Solo conexiones de red','Solamente ventanas abiertas'],c:0},
+      {u:5,q:'HDD y SSD son ejemplos de:',a:['Dispositivos de almacenamiento secundario','Tipos de usuario','Lenguajes de scripting','Planificadores de procesos'],c:0},
+      // Unidad 6
+      {u:6,q:'Un controlador de dispositivo sirve para:',a:['Permitir comunicación entre S.O. y hardware específico','Crear contraseñas','Reemplazar la memoria RAM','Ejecutar exclusivamente scripts Bash'],c:0},
+      {u:6,q:'Una cola de I/O permite:',a:['Ordenar solicitudes de entrada/salida antes de atenderlas','Eliminar usuarios repetidos','Evitar todo acceso al disco','Convertir GUI en CLI'],c:0},
+      {u:6,q:'Una interrupción es:',a:['Una señal que avisa a la CPU que un evento requiere atención','Una carpeta oculta','Un tipo de contraseña','Un archivo .BAT'],c:0},
+      {u:6,q:'Los temporizadores apoyan al S.O. en:',a:['Control de tiempos y eventos periódicos','Diseño de íconos','Creación de grupos de usuarios','Compresión de carpetas'],c:0},
+      {u:6,q:'La gestión de I/O se ocupa de:',a:['Coordinar dispositivos de entrada/salida y sus solicitudes','Definir colores del escritorio','Crear exclusivamente máquinas virtuales','Administrar solo cuentas online'],c:0}
+    ];
+
+    let current = 0;
+    let score = 0;
+    const qText = document.getElementById('questionText');
+    const answersBox = document.getElementById('answersBox');
+    const quizCounter = document.getElementById('quizCounter');
+    const quizProgress = document.getElementById('quizProgress');
+    const scoreMini = document.getElementById('scoreMini');
+    const quizUnit = document.getElementById('quizUnit');
+
+    function renderQuestion(){
+      const item = questions[current];
+      quizUnit.textContent = `Unidad ${item.u}`;
+      quizCounter.textContent = `Pregunta ${current+1}/${questions.length}`;
+      quizProgress.style.width = `${(current/questions.length)*100}%`;
+      scoreMini.textContent = `Puntaje: ${score}`;
+      qText.textContent = item.q;
+      answersBox.innerHTML = '';
+      item.a.forEach((ans,idx)=>{
+        const div = document.createElement('div');
+        div.className='col-md-6';
+        div.innerHTML = `<button class="answer-btn" onclick="answer(${idx})"><strong>${String.fromCharCode(65+idx)}.</strong> ${ans}</button>`;
+        answersBox.appendChild(div);
+      });
+    }
+
+    function answer(idx){
+      const item = questions[current];
+      const ok = idx === item.c;
+      if(ok) score++;
+      Swal.fire({
+        icon: ok ? 'success':'error',
+        title: ok ? 'Correcto':'Revisar concepto',
+        text: ok ? 'Muy bien, continuemos.' : `La respuesta correcta era: ${item.a[item.c]}`,
+        timer: 950,
+        showConfirmButton:false
+      }).then(()=>{
+        current++;
+        if(current < questions.length){
+          renderQuestion();
+        }else{
+          finishQuiz();
+        }
+      });
+    }
+
+    function finishQuiz(){
+      quizProgress.style.width = '100%';
+      const percent = Math.round((score/questions.length)*100);
+      let msg = 'Conviene repasar las unidades con menor seguridad y volver a intentar.';
+      if(percent >= 85) msg = 'Excelente dominio general. Estás pronto para una instancia de repaso final o evaluación.';
+      else if(percent >= 65) msg = 'Buen resultado. Reforzá los conceptos que confundiste y practicá con ejemplos.';
+      Swal.fire({
+        title:'Resultado final',
+        icon: percent >= 65 ? 'success':'warning',
+        html:`<h2 class="fw-bold">${score}/${questions.length}</h2><p>Porcentaje: <strong>${percent}%</strong></p><p>${msg}</p>`,
+        confirmButtonText:'Volver al inicio del quiz'
+      });
+      qText.textContent = 'Quiz finalizado';
+      answersBox.innerHTML = `<div class="col-12"><div class="p-4 bg-white rounded-4 text-center"><h4 class="fw-bold">Puntaje: ${score}/${questions.length}</h4><p class="text-secondary mb-0">Usá Reiniciar para practicar nuevamente.</p></div></div>`;
+      scoreMini.textContent = `Puntaje final: ${score}`;
+    }
+
+    function restartQuiz(){
+      current = 0; score = 0; renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
