@@ -1,0 +1,12 @@
+Solicitud #1 | Proceso: 2 | Operacion: escritura | Archivo: reporte.csv | Tiempo: 676ms
+Solicitud #2 | Proceso: 3 | Operacion: lectura | Archivo: reporte.csv | Tiempo: 402ms
+Solicitud #3 | Proceso: 1 | Operacion: lectura | Archivo: config.log | Tiempo: 644ms
+Solicitud #4 | Proceso: 1 | Operacion: escritura | Archivo: backup.bin | Tiempo: 358ms
+Solicitud #5 | Proceso: 3 | Operacion: escritura | Archivo: reporte.csv | Tiempo: 645ms
+Solicitud #6 | Proceso: 2 | Operacion: escritura | Archivo: config.log | Tiempo: 421ms
+Solicitud #7 | Proceso: 3 | Operacion: lectura | Archivo: config.log | Tiempo: 514ms
+Solicitud #8 | Proceso: 1 | Operacion: lectura | Archivo: datos.txt | Tiempo: 379ms
+Solicitud #9 | Proceso: 2 | Operacion: lectura | Archivo: backup.bin | Tiempo: 645ms
+Solicitud #10 | Proceso: 3 | Operacion: lectura | Archivo: config.log | Tiempo: 699ms
+Solicitud #11 | Proceso: 3 | Operacion: escritura | Archivo: config.log | Tiempo: 542ms
+Solicitud #12 | Proceso: 1 | Operacion: escritura | Archivo: reporte.csv | Tiempo: 402ms
